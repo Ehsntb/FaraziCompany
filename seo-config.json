@@ -1,0 +1,47 @@
+{
+  "siteUrl": "",
+  "siteName": "Farazi Company",
+  "socialImage": "assets/generated/hero-yarns-v2.webp",
+  "pages": {
+    "index": {
+      "fa": {
+        "title": "فرازی کمپانی | تأمین نخ و مواد اولیه نساجی",
+        "description": "تأمین انواع نخ طبیعی و مصنوعی و مواد اولیه نساجی در فرازی کمپانی؛ آشنایی با محصولات، مجموعه و راه‌های ارتباط برای استعلام و همکاری."
+      },
+      "en": {
+        "title": "Farazi Company | Yarn & Textile Raw Materials",
+        "description": "Explore natural and synthetic yarns and textile raw materials from Farazi Company. Browse our yarn collection and contact us for sourcing inquiries."
+      }
+    },
+    "products": {
+      "fa": {
+        "title": "انواع نخ و مواد اولیه نساجی | محصولات فرازی کمپانی",
+        "description": "معرفی نخ پنبه، اسپان، فیلامنت، پلی‌استر، ویسکوز، پلی‌استر ویسکوز و لمه؛ تصاویر و توضیحات محصولات فرازی کمپانی برای انتخاب و استعلام."
+      },
+      "en": {
+        "title": "Yarn Collection | Farazi Company Products",
+        "description": "Browse cotton, spun, filament, polyester, viscose, poly-viscose and metallic yarns. View product images and descriptions from Farazi Company."
+      }
+    },
+    "about": {
+      "fa": {
+        "title": "درباره فرازی کمپانی | تأمین مواد اولیه نساجی",
+        "description": "با فرازی کمپانی، زمینه فعالیت مجموعه در تأمین نخ و مواد اولیه نساجی و رویکرد ما در انتخاب محصول و همکاری تجاری آشنا شوید."
+      },
+      "en": {
+        "title": "About Farazi Company | Textile Material Sourcing",
+        "description": "Learn about Farazi Company, our work in yarn and textile raw material sourcing, and our approach to product selection and business cooperation."
+      }
+    },
+    "contact": {
+      "fa": {
+        "title": "تماس با فرازی کمپانی | استعلام نخ و همکاری",
+        "description": "راه‌های تماس با فرازی کمپانی از طریق تلفن، واتساپ و ایمیل؛ برای استعلام انواع نخ، تأمین مواد اولیه نساجی و همکاری با ما در ارتباط باشید."
+      },
+      "en": {
+        "title": "Contact Farazi Company | Yarn & Sourcing Inquiries",
+        "description": "Contact Farazi Company by phone, WhatsApp or email for yarn inquiries, textile raw material sourcing and business cooperation."
+      }
+    }
+  }
+}

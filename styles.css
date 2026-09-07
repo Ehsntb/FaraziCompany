@@ -1055,7 +1055,7 @@ html[dir="ltr"] .about-content .panel-button {
   border-radius: 6px;
   background: #0b0e0b;
 }
-.language-switch button {
+.language-switch a {
   min-width: 44px;
   min-height: 34px;
   padding: 5px 12px;
@@ -1069,20 +1069,20 @@ html[dir="ltr"] .about-content .panel-button {
     color 0.18s,
     border-color 0.18s;
 }
-.language-switch button[lang="en"] {
+.language-switch a[lang="en"] {
   font-family: Arial, sans-serif;
   letter-spacing: 0.7px;
 }
-.language-switch button:hover {
+.language-switch a:hover {
   color: #f0dfcc;
   background: #bc855d18;
 }
-.language-switch button[aria-pressed="true"] {
+.language-switch a[aria-current="page"] {
   background: #ac7653;
   border-color: #c7926a;
   color: #fff4e6;
 }
-.language-switch button:focus-visible {
+.language-switch a:focus-visible {
   outline: 2px solid #e1ad83;
   outline-offset: 3px;
 }
@@ -1090,13 +1090,13 @@ html[dir="ltr"] .about-content .panel-button {
   .header-tools {
     gap: 10px;
   }
-  .language-switch button {
+  .language-switch a {
     min-height: 36px;
     padding: 5px 9px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .language-switch button {
+  .language-switch a {
     transition: none;
   }
 }
@@ -1116,3 +1116,5 @@ html[dir="ltr"] .about-content .panel-button {
     gap: 8px;
   }
 }
+
+.language-switch a { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }

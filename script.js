@@ -14,7 +14,7 @@ const dialogContent = document.querySelector("#dialog-content");
 let currentDialog = null;
 const translatable = [...document.querySelectorAll("[data-en]")];
 translatable.forEach((element) => {
-  element.dataset.fa = element.innerHTML;
+  element.dataset.fa ||= element.innerHTML;
 });
 function t(fa, en) {
   return language === "fa" ? fa : en;
@@ -88,8 +88,8 @@ function renderProducts() {
 }
 function contactButton() {
   return (
-    '<a class="button" href="contact.html?lang=' +
-    language +
+    '<a class="button" href="contact' +
+    (language === 'en' ? '.en.html' : '.html') +
     '" data-close-dialog>' +
     t("تماس با ما", "Contact us") +
     "</a>"
@@ -220,45 +220,6 @@ function setLanguage(value) {
   language = value;
   document.documentElement.lang = value;
   document.documentElement.dir = value === "fa" ? "rtl" : "ltr";
-  try {
-    const pageUrl = new URL(location.href);
-    pageUrl.searchParams.set("lang", value);
-    history.replaceState(null, "", pageUrl);
-  } catch {}
-
-  const titles = {
-    products: ["محصولات | فرازی کمپانی", "Products | Farazi Company"],
-    home: [
-      "فرازی کمپانی | تأمین تخصصی مواد اولیه نساجی",
-      "Farazi Company | Textile Raw Materials",
-    ],
-    about: ["درباره ما | فرازی کمپانی", "About Us | Farazi Company"],
-    contact: ["تماس با ما | فرازی کمپانی", "Contact Us | Farazi Company"],
-  };
-
-  document.title = t(...titles[pageId]);
-  const descriptions = {
-    products: [
-      "فهرست محصولات فرازی کمپانی؛ نام، تصویر و معرفی نخ‌های طبیعی و مصنوعی.",
-      "Explore Farazi Company yarns: product names, photographs and descriptions.",
-    ],
-    home: [
-      "فرازی کمپانی؛ تأمین‌کننده تخصصی مواد اولیه نساجی و انواع نخ، واردات و صادرات.",
-      "Farazi Company: textile raw materials, quality yarns, and import and export services.",
-    ],
-    about: [
-      "آشنایی با فرازی کمپانی، سابقه مجموعه و حوزه فعالیت در تأمین مواد اولیه نساجی.",
-      "Discover Farazi Company, our experience and our work in textile raw material sourcing.",
-    ],
-    contact: [
-      "اطلاعات تماس، نشانی و ارتباط با فرازی کمپانی برای استعلام محصول و همکاری.",
-      "Contact Farazi Company for product inquiries, sourcing requirements and business cooperation.",
-    ],
-  };
-  document.querySelector('meta[name="description"]').content = t(
-    ...descriptions[pageId],
-  );
-
   translatable.forEach((element) => {
     element.innerHTML = element.dataset[value];
   });
@@ -267,8 +228,8 @@ function setLanguage(value) {
     .setAttribute("aria-label", t("زبان سایت", "Site language"));
   document.querySelectorAll("[data-language]").forEach((button) => {
     button.setAttribute(
-      "aria-pressed",
-      String(button.dataset.language === value),
+      "aria-current",
+      button.dataset.language === value ? "page" : "false",
     );
   });
   document
@@ -279,18 +240,6 @@ function setLanguage(value) {
   document
     .querySelectorAll(".button .icon use[href='#i-arrow']")
     .forEach((icon) => icon.parentElement.classList.add("direction-arrow"));
-  document.querySelectorAll("a[href]").forEach((link) => {
-    const href = link.getAttribute("href");
-    if (href.startsWith("#")) return;
-    const url = new URL(href, location.href);
-    if (url.origin === location.origin && /\.html$/.test(url.pathname)) {
-      url.searchParams.set("lang", language);
-      link.setAttribute(
-        "href",
-        url.pathname.split("/").pop() + url.search + url.hash,
-      );
-    }
-  });
   const labels = [
     [".brand", "فرازی کمپانی، صفحه اصلی", "Farazi Company, home"],
     [".breadcrumbs", "مسیر صفحه", "Breadcrumb"],
@@ -341,13 +290,6 @@ function setLanguage(value) {
     localStorage.setItem("farazi-language", value);
   } catch {}
 }
-document.querySelectorAll("[data-language]").forEach((button) => {
-  button.addEventListener("click", () => {
-    if (button.dataset.language !== language)
-      setLanguage(button.dataset.language);
-  });
-});
-
 // Interior pages retain their active page; only the home page tracks sections.
 if (pageId === "home") {
   const observer = new IntersectionObserver(
@@ -369,19 +311,14 @@ if (pageId === "home") {
     if (section) observer.observe(section);
   });
 }
-let savedLanguage;
-try {
-  savedLanguage = localStorage.getItem("farazi-language");
-} catch {}
-
+// Stable language URLs; preserve compatibility with previously shared links.
 const requestedLanguage = new URLSearchParams(location.search).get("lang");
-setLanguage(
-  ["fa", "en"].includes(requestedLanguage)
-    ? requestedLanguage
-    : savedLanguage === "en"
-      ? "en"
-      : "fa",
-);
+const pageLanguage = document.documentElement.lang;
+if (["fa", "en"].includes(requestedLanguage) && requestedLanguage !== pageLanguage) {
+  const target = document.querySelector('[data-language="' + requestedLanguage + '"]');
+  if (target) location.replace(target.href + location.hash);
+}
+setLanguage(pageLanguage);
 
 function prepareContactDraft() {
   const form = document.querySelector("#contact-form");
