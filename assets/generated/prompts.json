@@ -1,0 +1,71 @@
+{
+  "generator": "Built-in ImageGen",
+  "reference": "assets/reference-artwork.jpeg",
+  "webEncoding": {
+    "format": "webp",
+    "quality": 94,
+    "dimensions": "unchanged"
+  },
+  "images": [
+    {
+      "id": "metallic",
+      "original": "metallic.png",
+      "web": "metallic.webp",
+      "prompt": "Use case: product-mockup. Create ONE standalone square high-resolution photorealistic catalog photograph for the attached Farazi website reference. The reference is style/composition guidance only. Show exactly ONE complete upright industrial yarn cone/spool centered on a seamless very dark charcoal (#141511) studio floor and background, soft warm upper-left key light, subtle contact shadow, camera slightly above spool center so the cardboard core opening is visible. Entire spool occupies 78% of height and 58% of width with generous clean margins, no cropping. Match the premium realistic product photos in the reference's seven-product row. Rich accurate thread microtexture. No text, no labels, no logo, no collage, no border, no UI. Product: Copper-brown metallic lurex yarn, glossy reflective very fine threads, tall narrow cylindrical spool, warm tan hollow cardboard core. Match rightmost reference product."
+    },
+    {
+      "id": "poly-viscose",
+      "original": "poly-viscose.png",
+      "web": "poly-viscose.webp",
+      "prompt": "Use case: product-mockup. Create ONE standalone square high-resolution photorealistic catalog photograph for the attached Farazi website reference. The reference is style/composition guidance only. Show exactly ONE complete upright industrial yarn cone/spool centered on a seamless very dark charcoal (#141511) studio floor and background, soft warm upper-left key light, subtle contact shadow, camera slightly above spool center so the cardboard core opening is visible. Entire spool occupies 78% of height and 58% of width with generous clean margins, no cropping. Match the premium realistic product photos in the reference's seven-product row. Rich accurate thread microtexture. No text, no labels, no logo, no collage, no border, no UI. Product: Pale cool gray polyester-viscose yarn, matte silky fine diagonal crisscross winding, medium-height rounded cylindrical cone, small dark gray core rim. Match second product from right."
+    },
+    {
+      "id": "viscose",
+      "original": "viscose.png",
+      "web": "viscose.webp",
+      "prompt": "Use case: product-mockup. Create ONE standalone square high-resolution photorealistic catalog photograph for the attached Farazi website reference. The reference is style/composition guidance only. Show exactly ONE complete upright industrial yarn cone/spool centered on a seamless very dark charcoal (#141511) studio floor and background, soft warm upper-left key light, subtle contact shadow, camera slightly above spool center so the cardboard core opening is visible. Entire spool occupies 78% of height and 58% of width with generous clean margins, no cropping. Match the premium realistic product photos in the reference's seven-product row. Rich accurate thread microtexture. No text, no labels, no logo, no collage, no border, no UI. Product: Warm ivory natural cream viscose yarn, soft silky fine crisscross winding, medium-height broad rounded cylindrical cone with warm tan small core opening. Match third product from right."
+    },
+    {
+      "id": "polyester",
+      "original": "polyester.png",
+      "web": "polyester.webp",
+      "prompt": "Use case: product-mockup. One original high-resolution square premium textile catalog photograph for Farazi Company. Style reference: attached website. Exactly ONE complete upright industrial yarn spool centered, 78% image height and approximately 55% width. Seamless near-black warm charcoal (#141511) studio floor and backdrop, subtle soft contact shadow. Soft warm upper-left studio light, gentle fill highlights, camera slightly above center to see the small hollow cardboard core. Match a coherent luxury black-and-copper textile campaign with photorealistic authentic fiber winding and extremely detailed thread microtexture. No text, label, logo, border, collage or UI. Product: Bright off-white polyester yarn wound around a narrow warm tan cardboard core. Moderately tall slim cylinder, fine smooth slightly lustrous parallel winding with sparse cross threads. Match the fourth reference product."
+    },
+    {
+      "id": "filament",
+      "original": "filament.png",
+      "web": "filament.webp",
+      "prompt": "Use case: product-mockup. One original high-resolution square premium textile catalog photograph for Farazi Company. Style reference: attached website. Exactly ONE complete upright industrial yarn spool centered, 78% image height and approximately 55% width. Seamless near-black warm charcoal (#141511) studio floor and backdrop, subtle soft contact shadow. Soft warm upper-left studio light, gentle fill highlights, camera slightly above center to see the small hollow cardboard core. Match a coherent luxury black-and-copper textile campaign with photorealistic authentic fiber winding and extremely detailed thread microtexture. No text, label, logo, border, collage or UI. Product: Deep black continuous-filament yarn on a tan cardboard core, tall cylindrical spool. Fine tightly wound black silky threads picked out by subtle warm edge lighting so the black spool silhouette and texture remain clearly legible against the dark backdrop. Match fifth product from right."
+    },
+    {
+      "id": "spun",
+      "original": "spun.png",
+      "web": "spun.webp",
+      "prompt": "Use case: product-mockup. One original high-resolution square premium textile catalog photograph for Farazi Company. Style reference: attached website. Exactly ONE complete upright industrial yarn spool centered, 78% image height and approximately 55% width. Seamless near-black warm charcoal (#141511) studio floor and backdrop, subtle soft contact shadow. Soft warm upper-left studio light, gentle fill highlights, camera slightly above center to see the small hollow cardboard core. Match a coherent luxury black-and-copper textile campaign with photorealistic authentic fiber winding and extremely detailed thread microtexture. No text, label, logo, border, collage or UI. Product: Cool pearl-gray spun yarn on a small dark graphite cardboard core. Medium broad cylindrical spool with softly rounded shoulders. Matte very fine slightly fuzzy fibers and restrained crisscross winding. Match sixth product from right."
+    },
+    {
+      "id": "cotton",
+      "original": "cotton.png",
+      "web": "cotton.webp",
+      "prompt": "Use case: product-mockup. Create one original square premium photorealistic textile catalog photograph. Reference attached is visual guidance. Exactly one complete upright natural warm off-white cotton yarn spool on a small beige cardboard core, broad rounded cylindrical shape, fine softly fuzzy cotton fibers with subtle diagonal crisscross winding. Centered spool fills 78% height and 56% width, top core subtly visible, generous dark margins, no clipping. Seamless almost-black warm charcoal #141511 studio floor and background, warm soft upper-left light, subtle shadow. Extremely realistic tactile organic fiber details, premium Farazi Company black/copper campaign consistency. No labels, text, logos, collage, border, props or UI. Match leftmost reference product."
+    },
+    {
+      "id": "tehran-bazaar",
+      "original": "tehran-bazaar.png",
+      "web": "tehran-bazaar.webp",
+      "prompt": "Use case: historical-scene. Create an original high-resolution photorealistic architectural image for Farazi Company, inspired by the Tehran Grand Bazaar image in the lower-left section of the attached reference, NOT an image of the website. Portrait 1:2 ratio. Historic Persian bazaar entrance with tall pointed brick arch, intricate time-worn Iranian brickwork and stone detail, recessed dark doorway, subtle brass highlights, low warm side light, muted charcoal and sepia palette. Monumental intimate crop, slightly upward perspective. Architecture occupies right 80%; left edge falls into natural deep black shadow to integrate behind adjacent HTML copy. Small atmospheric entrance lights, no people, no modern storefronts, no invented logo, no text or lettering, no UI, no frames. Authentic Iranian bazaar atmosphere, original visual interpretation, not a claim of documentary accuracy."
+    },
+    {
+      "id": "global-trade",
+      "original": "global-trade.png",
+      "web": "global-trade.webp",
+      "prompt": "Use case: ads-marketing. Create one original premium raster visual for Farazi Company's global textile trade website. Wide landscape 2.5:1. Flat recognizable whole-world map made of thousands of tiny subdued warm-gray dots, all continents including Australia fully inside generous margins. On a uniform near-black #0c0d0c background. A few elegant fine copper-gold curved connection arcs from a small softly illuminated hub in Iran toward Europe, East Asia, North America, South America, and southern Africa. Tiny restrained warm luminous endpoints, understated light bloom, cinematic high-end financial editorial aesthetic. Clear legible world silhouette with realistic geographical proportions. No labels, no typography, no legends, no borders, no UI, no large glowing globe, no blue tones. Full independent visual, not a screenshot. Attached reference lower-right image is mood guidance. Preserve a calm black-and-copper textile brand identity. Decorative depiction of international connections, not a factual route map."
+    },
+    {
+      "id": "hero-yarns-v2",
+      "original": "hero-yarns-v2.png",
+      "web": "hero-yarns-v2.webp",
+      "prompt": "Use case: product-mockup. Create an ORIGINAL high-resolution luxury textile studio campaign banner for Farazi Company, closely inspired by the attached reference hero. Wide panoramic 2.3:1 landscape. Five fully realistic industrial thread spools on draped matte black silk: smaller pearl-gray upright at x51%, tall black upright x61%, large burnished copper upright x73%, ivory upright x88%, large copper-metallic horizontal spool across the right foreground with hollow cardboard opening toward center. All spools fully inside image with very small right margin. Left 43% nearly black clean negative space reserved for live HTML heading, no objects there. Soft directional warm studio light revealing delicate fibers, exceptionally crisp yarn winding, believable cylinders and cores, natural rich restrained copper reflections, fabric folds ground the still life. Original elegant art direction, tactile material realism, black-and-copper brand mood, authentic premium textile industry aesthetic. No text, no logos, no UI, no buttons, no borders. Entire image is a seamless background photograph."
+    }
+  ]
+}
