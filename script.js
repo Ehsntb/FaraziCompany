@@ -4,14 +4,22 @@ document.querySelectorAll("[data-copyright-year]").forEach(element => {
   element.textContent = String(new Date().getFullYear());
 });
 const pageId = document.body.dataset.page || "home";
-const products = window.FARAZI_PRODUCTS.map((product, index) => ({
-  ...product,
-  id: String(index),
-}));
+const products = (window.FARAZI_PRODUCTS || []).map((product, index) => {
+  const images = Array.isArray(product.images)
+    ? product.images.filter(Boolean)
+    : [product.image].filter(Boolean);
+  return {
+    ...product,
+    images,
+    image: images[0] || "",
+    id: String(index),
+  };
+});
 let language = "fa";
 const dialog = document.querySelector("#detail-dialog");
 const dialogContent = document.querySelector("#dialog-content");
 let currentDialog = null;
+let activeGalleryIndex = 0;
 const translatable = [...document.querySelectorAll("[data-en]")];
 translatable.forEach((element) => {
   element.dataset.fa ||= element.innerHTML;
@@ -35,23 +43,48 @@ function escapeHtml(value) {
 function renderCatalog() {
   const list = document.querySelector("#catalog-list");
   if (!list) return;
-  list.innerHTML = products
-    .map(
-      (product) =>
-        '<article class="catalog-product">' +
-        '<div class="catalog-photo"><img src="' +
-        escapeHtml(product.image) +
-        '" alt="' +
-        escapeHtml(product.name[language]) +
-        '" width="1254" height="1254" loading="lazy" decoding="async"></div>' +
-        '<div class="catalog-copy"><h2>' +
-        escapeHtml(product.name[language]) +
-        '</h2><div class="catalog-rule"></div><p>' +
-        escapeHtml(product.description[language]) +
-        "</p></div></article>",
-    )
-    .join("");
+  list.innerHTML = products.map(catalogItem).join("");
   document.querySelector("#catalog-empty").hidden = products.length !== 0;
+}
+function catalogItem(product) {
+  const featured = product.featured === true;
+  const photoCount = product.images.length;
+  return (
+    '<article class="catalog-product' +
+    (featured ? " catalog-product-featured" : "") +
+    '"><button class="catalog-product-trigger" type="button" data-product="' +
+    product.id +
+    '" aria-label="' +
+    t("مشاهده تصاویر و مشخصات ", "View photos and specifications: ") +
+    escapeHtml(product.name[language]) +
+    '"><div class="catalog-photo"><img src="' +
+    escapeHtml(product.image) +
+    '" alt="' +
+    escapeHtml(product.name[language]) +
+    '" loading="' +
+    (featured ? "eager" : "lazy") +
+    '" decoding="async">' +
+    (photoCount > 1
+      ? '<span class="photo-count">' +
+        photoCount +
+        " " +
+        t("تصویر", "photos") +
+        "</span>"
+      : "") +
+    '</div><div class="catalog-copy">' +
+    (featured
+      ? '<p class="product-specialty">' +
+        t("۱۵ سال تخصص در واردات و تجارت نخ لمه", "15 years of specialized Lurex trading") +
+        "</p>"
+      : "") +
+    "<h2>" +
+    escapeHtml(product.name[language]) +
+    '</h2><div class="catalog-rule"></div><p>' +
+    escapeHtml(product.description[language]) +
+    '</p><span class="catalog-action">' +
+    (photoCount > 1 ? t("مشاهده گالری", "View gallery") : t("مشاهده جزئیات", "View details")) +
+    " <span aria-hidden=\"true\">←</span></span></div></button></article>"
+  );
 }
 function art(product) {
   return (
@@ -98,12 +131,54 @@ function contactButton() {
 function renderDialog(kind) {
   const product = products.find((item) => item.id === kind);
   if (product) {
+    const selectedImage = product.images[activeGalleryIndex] || product.image;
+    const multipleImages = product.images.length > 1;
+    const thumbnails = multipleImages
+      ? '<div class="dialog-thumbnails" role="list" aria-label="' +
+        t("انتخاب تصویر", "Choose an image") +
+        '">' +
+        product.images
+          .map(
+            (image, index) =>
+              '<button type="button" role="listitem" data-gallery-index="' +
+              index +
+              '" class="' +
+              (index === activeGalleryIndex ? "is-active" : "") +
+              '" aria-label="' +
+              t("تصویر ", "Image ") +
+              (index + 1) +
+              '"><img src="' +
+              escapeHtml(image) +
+              '" alt="" loading="lazy" decoding="async"></button>',
+          )
+          .join("") +
+        "</div>"
+      : "";
     dialogContent.innerHTML =
       '<div class="dialog-product">' +
-      art(product) +
-      '<div><h2 id="dialog-title">' +
+      '<div class="dialog-gallery"><div class="dialog-gallery-stage"><img src="' +
+      escapeHtml(selectedImage) +
+      '" alt="' +
       escapeHtml(product.name[language]) +
-      "</h2><p>" +
+      " — " +
+      (activeGalleryIndex + 1) +
+      '">' +
+      (multipleImages
+        ? '<button type="button" class="gallery-arrow gallery-prev" data-gallery-step="-1" aria-label="' +
+          t("تصویر قبلی", "Previous image") +
+          '">‹</button><button type="button" class="gallery-arrow gallery-next" data-gallery-step="1" aria-label="' +
+          t("تصویر بعدی", "Next image") +
+          '">›</button><span class="gallery-counter" aria-live="polite">' +
+          (activeGalleryIndex + 1) +
+          " / " +
+          product.images.length +
+          "</span>"
+        : "") +
+      "</div>" +
+      thumbnails +
+      '</div><div class="dialog-product-copy"><h2 id="dialog-title">' +
+      escapeHtml(product.name[language]) +
+      "</h2><p class=\"dialog-description\">" +
       escapeHtml(product.description[language]) +
       '</p><p class="dialog-note">' +
       t(
@@ -133,8 +208,8 @@ function renderDialog(kind) {
       t("درباره فرازی کمپانی", "About Farazi Company") +
       "</h2><p>" +
       t(
-        "فرازی کمپانی با بیش از ۴۰ سال سابقه فعالیت در بازار بزرگ تهران، در زمینه تأمین تخصصی مواد اولیه نساجی فعالیت می‌کند. مجموعه محصولات ما شامل نخ پنبه، اسپان، فیلامنت، پلی استر، ویسکوز، پلی استر ویسکوز و نخ‌های لمه و متالیک است.",
-        "With over 40 years of experience in Tehran’s Grand Bazaar, Farazi Company specializes in supplying textile raw materials. Our range includes cotton, spun, filament, polyester, viscose, polyester-viscose and metallic yarns.",
+        "فرازی کمپانی با بیش از ۴۰ سال تجربه در بازار نساجی و ۱۵ سال تخصص در نخ لمه و متالیک، در زمینه تأمین، سورسینگ، واردات و صادرات انواع نخ فعالیت می‌کند.",
+        "With over 40 years in the textile market and 15 years of Lurex and metallic-yarn expertise, Farazi Company sources, supplies, imports and exports textile yarns.",
       ) +
       '</p><p class="dialog-note">' +
       t(
@@ -155,14 +230,13 @@ function renderDialog(kind) {
       "</p>" +
       contactButton();
   } else {
-    const network = kind === "social-instagram" ? "Instagram" : "LinkedIn";
     dialogContent.innerHTML =
       '<h2 id="dialog-title">' +
-      network +
+      t("اطلاعات بیشتر", "More information") +
       "</h2><p>" +
       t(
-        "نشانی رسمی این شبکه اجتماعی هنوز به سایت اضافه نشده است. برای ارتباط با مجموعه از اطلاعات تماس استفاده کنید.",
-        "The official profile has not been added yet. Please use the contact details to get in touch.",
+        "برای دریافت اطلاعات تکمیلی، موجودی و قیمت روز با فرازی کمپانی در ارتباط باشید.",
+        "Contact Farazi Company for further information, availability and current pricing.",
       ) +
       "</p>" +
       contactButton();
@@ -170,11 +244,30 @@ function renderDialog(kind) {
 }
 function openDialog(kind) {
   currentDialog = kind;
+  if (products.some((item) => item.id === kind)) activeGalleryIndex = 0;
   renderDialog(kind);
   if (!dialog.open) dialog.showModal();
   dialog.querySelector(".dialog-close").focus();
 }
+function moveGallery(step) {
+  const product = products.find((item) => item.id === currentDialog);
+  if (!product || product.images.length < 2) return;
+  activeGalleryIndex =
+    (activeGalleryIndex + step + product.images.length) % product.images.length;
+  renderDialog(currentDialog);
+}
 document.addEventListener("click", (event) => {
+  const galleryIndex = event.target.closest("[data-gallery-index]");
+  const galleryStep = event.target.closest("[data-gallery-step]");
+  if (galleryIndex) {
+    activeGalleryIndex = Number(galleryIndex.dataset.galleryIndex);
+    renderDialog(currentDialog);
+    return;
+  }
+  if (galleryStep) {
+    moveGallery(Number(galleryStep.dataset.galleryStep));
+    return;
+  }
   const product = event.target.closest("[data-product]");
   const opener = event.target.closest("[data-dialog]");
   if (product) openDialog(product.dataset.product);
@@ -215,6 +308,8 @@ nav.addEventListener("click", (event) => {
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeMenu();
+  if (dialog.open && event.key === "ArrowLeft") moveGallery(-1);
+  if (dialog.open && event.key === "ArrowRight") moveGallery(1);
 });
 function setLanguage(value) {
   language = value;
@@ -325,7 +420,7 @@ function prepareContactDraft() {
   if (!form) return;
   const fields = new FormData(form);
   const subject =
-    document.querySelector("#message-subject").selectedOptions[0].textContent;
+    document.querySelector("#message-subject").selectedOptions[0].textContent.trim();
   const lines = [
     t("نام: ", "Name: ") + fields.get("name").trim(),
     t("مجموعه: ", "Company: ") + (fields.get("company").trim() || "—"),
@@ -337,7 +432,7 @@ function prepareContactDraft() {
   const body = lines.join("\n");
   document.querySelector("#message-body").textContent = body;
   document.querySelector("#email-draft-link").href =
-    "mailto:info@farazico.com?subject=" +
+    "mailto:farazicompanyfc@gmail.com?subject=" +
     encodeURIComponent(subject + " | Farazi Company") +
     "&body=" +
     encodeURIComponent(body);

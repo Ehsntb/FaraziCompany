@@ -61,7 +61,11 @@ products=json.loads(subprocess.check_output(["node","-e",
 for p in products:
     for lang in ("fa","en"):
         assert p["name"][lang] and p["description"][lang], "Missing product translation"
-    assert (ROOT/p["image"]).is_file(), "Missing product image"
+    assert p.get("images"), "Each product needs at least one image"
+    for image in p["images"]:
+        assert (ROOT/image).is_file(), "Missing product image: "+image
+    p["image"]=p["images"][0]
+    assert isinstance(p.get("featured",False),bool)
     assert isinstance(p["showOnHome"],bool)
 
 urls=[]
@@ -78,7 +82,7 @@ for page,translations in config["pages"].items():
                 else:
                     n.attrs.pop("data-fa",None)
             if lang=="en":
-                labels={"فرازی کمپانی، صفحه اصلی":"Farazi Company, home","منوی اصلی":"Main navigation","زبان سایت":"Site language","باز کردن منو":"Open menu","بستن پنجره":"Close dialog","مسیر صفحه":"Breadcrumb","راه‌های ارتباطی":"Contact methods","مزیت‌های فرازی کمپانی":"Why Farazi Company","تصویرسازی الهام‌گرفته از معماری بازار تهران":"Illustration inspired by Tehran Bazaar architecture","تصویرسازی معماری بازار تهران":"Illustration of Tehran Bazaar architecture","نخ‌های پنبه‌ای، مشکی و مسی در کنار یکدیگر":"Ivory, black and copper yarn spools","نقشه ارتباطات تجاری در سراسر جهان":"Illustration of global trade connections"}
+                labels={"فرازی کمپانی، صفحه اصلی":"Farazi Company, home","منوی اصلی":"Main navigation","زبان سایت":"Site language","باز کردن منو":"Open menu","بستن پنجره":"Close dialog","مسیر صفحه":"Breadcrumb","راه‌های ارتباطی":"Contact methods","مزیت‌های فرازی کمپانی":"Why Farazi Company","تصویرسازی الهام‌گرفته از معماری بازار تهران":"Illustration inspired by Tehran Bazaar architecture","تصویرسازی معماری بازار تهران":"Illustration of Tehran Bazaar architecture","نخ‌های پنبه‌ای، مشکی و مسی در کنار یکدیگر":"Ivory, black and copper yarn spools","نقشه ارتباطات تجاری در سراسر جهان":"Illustration of global trade connections","تجربه و همکاری":"Experience and cooperation"}
                 for attr in ("aria-label","alt"):
                     if n.attrs.get(attr) in labels: n.attrs[attr]=labels[n.attrs[attr]]
             if n.tag=="html": n.attrs.update(lang=lang,dir="rtl" if lang=="fa" else "ltr")
@@ -100,9 +104,14 @@ for page,translations in config["pages"].items():
                 for i,p in enumerate(products):
                     if p not in items: continue
                     name,desc=esc(p["name"][lang]),esc(p["description"][lang])
-                    img='<img src="'+esc(p["image"])+'" alt="'+name+'" width="1254" height="1254" loading="lazy" decoding="async">'
+                    loading="eager" if catalog and p.get("featured") else "lazy"
+                    img='<img src="'+esc(p["image"])+'" alt="'+name+'" loading="'+loading+'" decoding="async">'
                     if catalog:
-                        cards.append('<article class="catalog-product"><div class="catalog-photo">'+img+'</div><div class="catalog-copy"><h2>'+name+'</h2><div class="catalog-rule"></div><p>'+desc+'</p></div></article>')
+                        featured=p.get("featured",False)
+                        count=(('<span class="photo-count">'+str(len(p["images"]))+" "+("تصویر" if lang=="fa" else "photos")+'</span>') if len(p["images"])>1 else "")
+                        specialty=(('<p class="product-specialty">'+("۱۵ سال تخصص در واردات و تجارت نخ لمه" if lang=="fa" else "15 years of specialized Lurex trading")+'</p>') if featured else "")
+                        action=("مشاهده گالری" if len(p["images"])>1 else "مشاهده جزئیات") if lang=="fa" else ("View gallery" if len(p["images"])>1 else "View details")
+                        cards.append('<article class="catalog-product'+(" catalog-product-featured" if featured else "")+'"><button class="catalog-product-trigger" type="button" data-product="'+str(i)+'"><div class="catalog-photo">'+img+count+'</div><div class="catalog-copy">'+specialty+'<h2>'+name+'</h2><div class="catalog-rule"></div><p>'+desc+'</p><span class="catalog-action">'+action+' <span aria-hidden="true">←</span></span></div></button></article>')
                     else:
                         cards.append('<button class="product-card" type="button" data-product="'+str(i)+'"><div class="asset-frame product-art">'+img+'</div><div class="product-info"><h3>'+name+'</h3><span class="view-label">'+("مشاهده" if lang=="fa" else "View")+'</span></div></button>')
                 n.set_html("".join(cards))
@@ -137,7 +146,7 @@ for page,translations in config["pages"].items():
             if page!="index":
                 schema["breadcrumb"]={"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"خانه" if lang=="fa" else "Home","item":absolute(file_for("index",lang))},{"@type":"ListItem","position":2,"name":info["title"],"item":url}]}
         if page=="products":
-            schema["mainEntity"]={"@type":"ItemList","numberOfItems":len(products),"itemListElement":[{"@type":"ListItem","position":i+1,"item":{"@type":"Thing","name":p["name"][lang],"description":p["description"][lang],**({"image":absolute(p["image"])} if base else {})}} for i,p in enumerate(products)]}
+            schema["mainEntity"]={"@type":"ItemList","numberOfItems":len(products),"itemListElement":[{"@type":"ListItem","position":i+1,"item":{"@type":"Thing","name":p["name"][lang],"description":p["description"][lang],**({"image":absolute(p["images"][0])} if base else {})}} for i,p in enumerate(products)]}
         metadata+='<script data-seo="true" type="application/ld+json">'+json.dumps(schema,ensure_ascii=False).replace("<","\\u003c")+'</script>\n'
         head.children.extend(parse(metadata).children)
         (ROOT/file_for(page,lang)).write_text(root.html(),encoding="utf-8")

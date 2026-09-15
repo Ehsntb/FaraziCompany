@@ -1,167 +1,98 @@
 /**
- * اطلاعات محصولات — فقط این فایل را ویرایش کنید.
- * name / description: متن فارسی (fa) و انگلیسی (en).
- * image: مسیر عکس، نسبت به پوشه اصلی سایت.
- * showOnHome: true برای نمایش در صفحه اصلی، false برای عدم نمایش.
- * همه محصولات، مستقل از showOnHome، در صفحه محصولات و گالری دیده می‌شوند.
- * ترتیب این آرایه، ترتیب نمایش محصولات است.
- * برای افزودن محصول، یک شیء چهارقسمتی را کپی و ویرایش کنید.
+ * منبع واحد اطلاعات محصولات سایت.
+ * name / description: متن فارسی و انگلیسی.
+ * images: تصاویر واقعی هر گروه محصول؛ تصویر اول، تصویر شاخص است.
+ * featured: نمایش برجسته در ابتدای صفحه محصولات.
+ * showOnHome: نمایش کارت محصول در صفحه اصلی.
  */
 window.FARAZI_PRODUCTS = [
   {
     name: {
       fa: "نخ لمه و متالیک",
-      en: "Metallic yarn",
+      en: "Lurex & metallic yarn",
     },
     description: {
-      fa: "نخ‌های براق و متالیک برای ایجاد جلوه‌ای درخشان در پارچه، بافت‌های تزئینی و گلدوزی.",
-      en: "Lustrous metallic yarns for decorative weaving, embroidery and fabrics with a distinctive finish.",
+      fa: "انواع نخ لمه، سیم زری و گلابتون در رنگ‌های نقره‌ای، طلایی، بی‌رنگ، مشکی و رنگی.\nکدها: MH، MX، M، SD | نمرات: 1/100، 1/92، 1/69، 1/32 | ضخامت: ۱۲، ۱۵، ۲۰، ۲۳ و ۲۵ میکرون",
+      en: "Lurex, metallic, zari and golabatoon yarns in silver, gold, transparent, black and assorted colours.\nTypes: MH, MX, M, SD | Counts: 1/100, 1/92, 1/69, 1/32 | Thickness: 12, 15, 20, 23 and 25 microns",
     },
-    image: "assets/generated/metallic.webp",
+    images: [
+      "assets/products/metallic-02.webp",
+      "assets/products/metallic-01.webp",
+      "assets/products/metallic-03.webp",
+      "assets/products/metallic-04.webp",
+      "assets/products/metallic-05.webp",
+      "assets/products/metallic-06.webp",
+      "assets/products/metallic-07.webp",
+      "assets/products/metallic-08.webp",
+      "assets/products/metallic-09.webp",
+    ],
+    featured: true,
+    showOnHome: true,
+  },
+  {
+    name: { fa: "نخ پنبه", en: "Cotton yarn" },
+    description: {
+      fa: "انواع نخ پنبه ایرانی و ازبک در نمرات ۱۰، ۲۰، ۳۰ و ۴۰.",
+      en: "Iranian and Uzbek cotton yarns in counts 10, 20, 30 and 40.",
+    },
+    images: [
+      "assets/products/cotton-01.webp",
+      "assets/products/cotton-02.webp",
+    ],
+    featured: false,
+    showOnHome: true,
+  },
+  {
+    name: { fa: "نخ اسپان", en: "Spun yarn" },
+    description: {
+      fa: "انواع نخ اسپان خام، ملانژ و رنگی در نمرات ۲۰، ۳۰ و ۴۰.",
+      en: "Raw, melange and coloured spun yarns in counts 20, 30 and 40.",
+    },
+    images: ["assets/products/spun-01.webp"],
+    featured: false,
     showOnHome: true,
   },
   {
     name: {
-      fa: "نخ پلی استر ویسکوز",
-      en: "Polyester viscose",
+      fa: "نخ پلی‌استر، ترویرا و فیلامنت",
+      en: "Polyester, Trevira & filament yarn",
     },
     description: {
-      fa: "ترکیبی از ویژگی‌های پلی استر و ویسکوز، مناسب برای تولید پارچه‌های پوشاک و مصارف نساجی.",
-      en: "A blend of polyester and viscose for apparel fabrics and a range of textile applications.",
+      fa: "انواع نخ پلی‌استر، ترویرا و فیلامنت ایرانی و خارجی؛ خام، رنگی و مشکی در نمرات ۷۵، ۱۰۰، ۱۵۰، ۳۰۰، ۴۵۰ و ۶۰۰.",
+      en: "Iranian and imported polyester, Trevira and filament yarns; raw, coloured and black in counts 75, 100, 150, 300, 450 and 600.",
     },
-    image: "assets/generated/poly-viscose.webp",
+    images: [
+      "assets/products/polyester-03.webp",
+      "assets/products/polyester-01.webp",
+      "assets/products/polyester-02.webp",
+    ],
+    featured: false,
     showOnHome: true,
   },
   {
     name: {
-      fa: "نخ ویسکوز",
-      en: "Viscose yarn",
+      fa: "نخ ویسکوز و پلی‌استر ویسکوز",
+      en: "Viscose & polyester-viscose yarn",
     },
     description: {
-      fa: "نخ ویسکوز با لطافت و جلوه‌ای ابریشمی، مناسب برای بافت پارچه‌های نرم و خوش‌افت.",
-      en: "Soft viscose yarn with a silky appearance for smooth, beautifully draping fabrics.",
+      fa: "انواع نخ ویسکوز و پلی‌استر ویسکوز رینگ، اپن‌اند و ایرجت؛ خام و رنگی، ایرانی، چینی و هندی در نمرات ۲۰، ۳۰ و ۴۰.",
+      en: "Ring, open-end and air-jet viscose and polyester-viscose yarns; raw and coloured, sourced from Iran, China and India in counts 20, 30 and 40.",
     },
-    image: "assets/generated/viscose.webp",
+    images: [
+      "assets/products/viscose-01.webp",
+      "assets/products/viscose-02.webp",
+    ],
+    featured: false,
     showOnHome: true,
   },
   {
-    name: {
-      fa: "نخ پلی استر",
-      en: "Polyester yarn",
-    },
+    name: { fa: "کش لاکرا", en: "Lycra elastane yarn" },
     description: {
-      fa: "نخ پلی استر برای کاربردهای متنوع بافندگی، تولید پوشاک و منسوجات.",
-      en: "Versatile polyester yarn for weaving, apparel production and everyday textiles.",
+      fa: "انواع کش لاکرا چینی و ترک از برندهای هوافن، میگیتکس، کرورا، سان‌استار و سان‌رایس در نمرات ۲۰، ۳۰، ۴۰، ۷۰، ۱۴۰ و ۲۱۰.",
+      en: "Chinese and Turkish Lycra elastane yarn from Huafon, Migtex, Creora, Sunstar and Sunrise in counts 20, 30, 40, 70, 140 and 210.",
     },
-    image: "assets/generated/polyester.webp",
+    images: ["assets/products/lycra-01.webp"],
+    featured: false,
     showOnHome: true,
-  },
-  {
-    name: {
-      fa: "نخ فیلامنت",
-      en: "Filament yarn",
-    },
-    description: {
-      fa: "نخ با الیاف پیوسته و ساختار یکنواخت، مناسب برای تولید انواع پارچه و منسوجات.",
-      en: "Continuous-filament yarn with a uniform structure for a variety of fabrics and textiles.",
-    },
-    image: "assets/generated/filament.webp",
-    showOnHome: true,
-  },
-  {
-    name: {
-      fa: "نخ اسپان",
-      en: "Spun yarn",
-    },
-    description: {
-      fa: "نخ ریسیده‌شده برای مصارف متنوع نساجی و تولید پارچه‌های بافته‌شده و کشباف.",
-      en: "Spun yarn for versatile textile applications, including woven and knitted fabrics.",
-    },
-    image: "assets/generated/spun.webp",
-    showOnHome: true,
-  },
-  {
-    name: {
-      fa: "نخ پنبه",
-      en: "Cotton yarn",
-    },
-    description: {
-      fa: "نخ پنبه با منشأ طبیعی و بافتی لطیف، مناسب برای تولید پوشاک و منسوجات روزمره.",
-      en: "Natural cotton yarn with a soft feel, suitable for clothing and everyday textiles.",
-    },
-    image: "assets/generated/cotton.webp",
-    showOnHome: true,
-  },
-  {
-    name: {
-      fa: "نخ پنبه",
-      en: "Cotton yarn",
-    },
-    description: {
-      fa: "نخ پنبه با منشأ طبیعی و بافتی لطیف، مناسب برای تولید پوشاک و منسوجات روزمره.",
-      en: "Natural cotton yarn with a soft feel, suitable for clothing and everyday textiles.",
-    },
-    image: "assets/generated/cotton.webp",
-    showOnHome: false,
-  },
-  {
-    name: {
-      fa: "نخ پنبه",
-      en: "Cotton yarn",
-    },
-    description: {
-      fa: "نخ پنبه با منشأ طبیعی و بافتی لطیف، مناسب برای تولید پوشاک و منسوجات روزمره.",
-      en: "Natural cotton yarn with a soft feel, suitable for clothing and everyday textiles.",
-    },
-    image: "assets/generated/cotton.webp",
-    showOnHome: false,
-  },
-  {
-    name: {
-      fa: "نخ پنبه",
-      en: "Cotton yarn",
-    },
-    description: {
-      fa: "نخ پنبه با منشأ طبیعی و بافتی لطیف، مناسب برای تولید پوشاک و منسوجات روزمره.",
-      en: "Natural cotton yarn with a soft feel, suitable for clothing and everyday textiles.",
-    },
-    image: "assets/generated/cotton.webp",
-    showOnHome: false,
-  },
-  {
-    name: {
-      fa: "نخ پنبه",
-      en: "Cotton yarn",
-    },
-    description: {
-      fa: "نخ پنبه با منشأ طبیعی و بافتی لطیف، مناسب برای تولید پوشاک و منسوجات روزمره.",
-      en: "Natural cotton yarn with a soft feel, suitable for clothing and everyday textiles.",
-    },
-    image: "assets/generated/cotton.webp",
-    showOnHome: false,
-  },
-  {
-    name: {
-      fa: "نخ پنبه",
-      en: "Cotton yarn",
-    },
-    description: {
-      fa: "نخ پنبه با منشأ طبیعی و بافتی لطیف، مناسب برای تولید پوشاک و منسوجات روزمره.",
-      en: "Natural cotton yarn with a soft feel, suitable for clothing and everyday textiles.",
-    },
-    image: "assets/generated/cotton.webp",
-    showOnHome: false,
-  },
-  {
-    name: {
-      fa: "نخ پنبه",
-      en: "Cotton yarn",
-    },
-    description: {
-      fa: "نخ پنبه با منشأ طبیعی و بافتی لطیف، مناسب برای تولید پوشاک و منسوجات روزمره.",
-      en: "Natural cotton yarn with a soft feel, suitable for clothing and everyday textiles.",
-    },
-    image: "assets/generated/cotton.webp",
-    showOnHome: false,
   },
 ];

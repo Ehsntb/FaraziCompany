@@ -518,7 +518,7 @@ svg.icon {
 }
 .contact-strip {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  grid-template-columns: 1.7fr 1.35fr 1fr 1.2fr;
   margin-top: calc(16 * var(--u));
   min-height: calc(81 * var(--u));
   border: 1px solid #2c2e28;
@@ -565,6 +565,14 @@ svg.icon {
 .contact-item a:hover {
   color: var(--copper-light);
 }
+.contact-item .fax-number {
+  display: block;
+  margin-top: calc(2 * var(--u));
+  color: var(--muted);
+  font-size: calc(8 * var(--u));
+  letter-spacing: 0;
+  text-transform: none;
+}
 .address-item p {
   font-size: calc(9.5 * var(--u));
 }
@@ -602,8 +610,8 @@ svg.icon {
   color: var(--copper-light);
 }
 .detail-dialog {
-  width: min(680px, calc(100% - 32px));
-  max-height: 85dvh;
+  width: min(980px, calc(100% - 32px));
+  max-height: 90dvh;
   border: 1px solid #866244;
   border-radius: 8px;
   padding: 36px;
@@ -643,13 +651,96 @@ body:has(dialog[open]) {
 }
 .dialog-product {
   display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 26px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: 32px;
+  align-items: start;
 }
-.dialog-product .product-art {
+.dialog-gallery,
+.dialog-product-copy {
+  min-width: 0;
+}
+.dialog-gallery-stage {
+  position: relative;
+  aspect-ratio: 4 / 3;
   border: 1px solid var(--border);
-  border-radius: 5px;
+  border-radius: 7px;
+  overflow: hidden;
+  background: #f4f1eb;
+}
+.dialog-gallery-stage > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #c8976c88;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: #090a08dc;
+  color: #fff;
+  font: 28px/1 Arial, sans-serif;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.gallery-arrow:hover {
+  background: #5f402a;
+  border-color: var(--copper-light);
+}
+.gallery-prev {
+  left: 12px;
+}
+.gallery-next {
+  right: 12px;
+}
+.gallery-counter {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #090a08dc;
+  color: #f4e4d3;
+  font-size: 11px;
+  direction: ltr;
+}
+.dialog-thumbnails {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 72px;
+  gap: 8px;
+  margin-top: 10px;
+  padding-bottom: 4px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+}
+.dialog-thumbnails button {
+  aspect-ratio: 4 / 3;
+  border: 1px solid #32342d;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f4f1eb;
+  opacity: 0.65;
+}
+.dialog-thumbnails button:hover,
+.dialog-thumbnails button.is-active {
+  border-color: var(--copper-light);
+  opacity: 1;
+}
+.dialog-thumbnails img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dialog-product-copy {
+  padding-top: 12px;
+}
+.dialog-description {
+  white-space: pre-line;
 }
 .dialog-grid {
   display: grid;
@@ -950,10 +1041,12 @@ html[lang="en"] .contact-item > div {
     grid-template-columns: 1fr;
     gap: 18px;
   }
-  .dialog-product > .asset-frame {
-    max-width: 170px;
-    width: 100%;
-    margin: auto;
+  .dialog-product-copy {
+    padding-top: 0;
+  }
+  .gallery-arrow {
+    width: 34px;
+    height: 34px;
   }
   .dialog-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
