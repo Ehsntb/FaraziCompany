@@ -1,0 +1,3 @@
+# Keep arbitrary local correspondence out of Git; this reviewed archive is sanitized.
+private/*
+!private/farazi-whatsapp-chat.html
