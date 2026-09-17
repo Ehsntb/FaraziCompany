@@ -174,3 +174,15 @@ git diff --check
 عکس‌های واقعی ارسال‌شده توسط کارفرما، بهینه‌سازی و با فرمت WebP در `assets/products/` قرار گرفته‌اند و گالری محصولات از همین فایل‌ها استفاده می‌کند. تصاویر تزئینی تولیدشده در `assets/generated/` قرار دارند؛ تصویر بازار و نقشه تجارت جنبه تصویرسازی دارند و پرامپت‌ها در `assets/generated/prompts.json` ثبت شده‌اند.
 
 لوگوهای پروژه در `logo/` و فونت محلی Vazirmatn به‌همراه مجوز SIL OFL در `assets/fonts/` قرار دارند.
+
+## آرشیو چت کارفرما
+
+فایل `private/farazi-whatsapp-chat.html` چت قابل جست‌وجو را نمایش می‌دهد. فایل‌های اصلی عکس و صدا در `private/farazi-whatsapp-media/` همراه آرشیو در گیت نگهداری می‌شوند. برای نمایش مدیا، این پوشه باید کنار HTML باقی بماند.
+
+برای بازسازی از خروجی واتساپ:
+
+```powershell
+python scripts/build-chat-archive.py "C:\Users\ehsntb\Downloads\WhatsApp Chat @FaraziCompanyFC" private/farazi-whatsapp-chat.html
+```
+
+پیش از انتقال سایت به هاست، می‌توانید پوشهٔ `private/` را کامل حذف کنید.

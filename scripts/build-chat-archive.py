@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Build a self-contained, searchable HTML viewer from a WhatsApp export."""
+"""Build a searchable HTML viewer and local media files from a WhatsApp export."""
 
 from __future__ import annotations
 
 import argparse
-import base64
 import html
-import mimetypes
 import re
+import shutil
+from urllib.parse import quote
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -129,21 +129,12 @@ def linkify(value: str) -> str:
     return "".join(chunks).replace("\n", "<br>")
 
 
-def data_url(path: Path) -> str:
-    mime, _ = mimetypes.guess_type(path.name)
-    if path.suffix.lower() == ".opus":
-        mime = "audio/ogg"
-    mime = mime or "application/octet-stream"
-    encoded = base64.b64encode(path.read_bytes()).decode("ascii")
-    return f"data:{mime};base64,{encoded}"
-
-
 def persian_digits(value: str) -> str:
     return value.translate(str.maketrans("0123456789", "۰۱۲۳۴۵۶۷۸۹"))
 
 
 def render_attachment(path: Path, message: Message, media_number: int) -> tuple[str, str]:
-    source = data_url(path)
+    source = "farazi-whatsapp-media/" + quote(path.name)
     suffix = path.suffix.lower()
     safe_name = html.escape(path.name)
     context = html.escape(f"{message.sender}، {message.date_raw}، {message.time_raw}", quote=True)
@@ -214,7 +205,7 @@ def render_archive(messages: list[Message], export_dir: Path, redacted_count: in
         message_parts.append(
             f'<article class="message {sender_class}" id="message-{index}" '
             f'data-sender="{sender_class}" data-types="{html.escape(type_tokens, quote=True)}" '
-            f'data-search="{html.escape(search_text, quote=True)}">'
+            f'data-search="{html.escape(" ".join(search_text.split()), quote=True)}">'
             f'<div class="bubble"><header><strong>{html.escape(sender_label)}</strong>{redacted_badge}</header>'
             f'{text_markup}{"".join(media_markup)}'
             f'<footer><time datetime="{message.timestamp.isoformat()}">{persian_digits(message.time_raw[:5])}</time>'
@@ -402,7 +393,7 @@ def render_archive(messages: list[Message], export_dir: Path, redacted_count: in
   <main>
     <div class="archive" id="archive">
       <section class="summary">
-        <div><strong>نسخهٔ خوانا و خودکفا</strong><p>همهٔ مدیا داخل همین فایل HTML قرار دارد. اطلاعات ورود هاست عمداً پنهان شده و صفحه برای موتورهای جست‌وجو noindex است.</p></div>
+        <div><strong>آرشیو گفت‌وگو و مدیا</strong><p>عکس‌ها و پیام‌های صوتی از پوشهٔ همراه آرشیو بارگذاری می‌شوند. اطلاعات ورود هاست عمداً پنهان شده و صفحه برای موتورهای جست‌وجو noindex است.</p></div>
         <div class="summary-count"><span id="visible-count">__MESSAGE_COUNT__</span> پیام · __IMAGE_COUNT__ تصویر · __AUDIO_COUNT__ ویس</div>
       </section>
       <div id="messages">__MESSAGES__</div>
@@ -522,6 +513,13 @@ def main() -> None:
     redacted_count = redact_credentials(messages)
     output = args.output.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
+    media_dir = output.parent / "farazi-whatsapp-media"
+    media_dir.mkdir(parents=True, exist_ok=True)
+    for name in dict.fromkeys(referenced):
+        source = export_dir / name
+        destination = media_dir / source.name
+        if source.resolve() != destination.resolve():
+            shutil.copy2(source, destination)
     output.write_text(render_archive(messages, export_dir, redacted_count), encoding="utf-8")
     print(
         f"Built {output}\n"

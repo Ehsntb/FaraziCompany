@@ -1,3 +1,5 @@
-# Keep arbitrary local correspondence out of Git; this reviewed archive is sanitized.
+# Track the chat archive and its original media files.
 private/*
 !private/farazi-whatsapp-chat.html
+!private/farazi-whatsapp-media/
+__pycache__/
