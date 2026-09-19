@@ -16,6 +16,7 @@ window.FARAZI_PRODUCTS = [
       en: "Lurex, metallic, zari and golabatoon yarns in silver, gold, transparent, black and assorted colours.\nTypes: MH, MX, M, SD | Counts: 1/100, 1/92, 1/69, 1/32 | Thickness: 12, 15, 20, 23 and 25 microns",
     },
     images: [
+      "assets/generated/metallic.webp",
       "assets/products/metallic-02.webp",
       "assets/products/metallic-01.webp",
       "assets/products/metallic-03.webp",
@@ -25,6 +26,13 @@ window.FARAZI_PRODUCTS = [
       "assets/products/metallic-07.webp",
       "assets/products/metallic-08.webp",
       "assets/products/metallic-09.webp",
+      "assets/products/IMG_6866.JPG",
+      "assets/products/IMG_6867.JPG",
+      "assets/products/IMG_6871.JPG",
+      "assets/products/IMG_6873.JPG",
+      "assets/products/IMG_6881.JPG",
+      "assets/products/IMG_6883.JPG",
+      "assets/products/IMG_6884.JPG",
     ],
     featured: true,
     showOnHome: true,
@@ -36,6 +44,7 @@ window.FARAZI_PRODUCTS = [
       en: "Iranian and Uzbek cotton yarns in counts 10, 20, 30 and 40.",
     },
     images: [
+      "assets/generated/cotton.webp",
       "assets/products/cotton-01.webp",
       "assets/products/cotton-02.webp",
     ],
@@ -48,13 +57,13 @@ window.FARAZI_PRODUCTS = [
       fa: "انواع نخ اسپان خام، ملانژ و رنگی در نمرات ۲۰، ۳۰ و ۴۰.",
       en: "Raw, melange and coloured spun yarns in counts 20, 30 and 40.",
     },
-    images: ["assets/products/spun-01.webp"],
+    images: ["assets/generated/spun.webp", "assets/products/spun-01.webp"],
     featured: false,
     showOnHome: true,
   },
   {
     name: {
-      fa: "نخ پلی‌استر، ترویرا و فیلامنت",
+      fa: "نخ پلی‌استر ",
       en: "Polyester, Trevira & filament yarn",
     },
     description: {
@@ -62,6 +71,7 @@ window.FARAZI_PRODUCTS = [
       en: "Iranian and imported polyester, Trevira and filament yarns; raw, coloured and black in counts 75, 100, 150, 300, 450 and 600.",
     },
     images: [
+      "assets/generated/polyester.webp",
       "assets/products/polyester-03.webp",
       "assets/products/polyester-01.webp",
       "assets/products/polyester-02.webp",
@@ -71,14 +81,15 @@ window.FARAZI_PRODUCTS = [
   },
   {
     name: {
-      fa: "نخ ویسکوز و پلی‌استر ویسکوز",
+      fa: " نخ ویسکوز",
       en: "Viscose & polyester-viscose yarn",
     },
     description: {
-      fa: "انواع نخ ویسکوز و پلی‌استر ویسکوز رینگ، اپن‌اند و ایرجت؛ خام و رنگی، ایرانی، چینی و هندی در نمرات ۲۰، ۳۰ و ۴۰.",
+      fa: "انواع نخ ویسکوز و پلی‌استر ویسکوز رینگ، اپن‌ و ایرجت؛ خام و رنگی، ایرانی، چینی و هندی در نمرات ۲۰، ۳۰ و ۴۰.",
       en: "Ring, open-end and air-jet viscose and polyester-viscose yarns; raw and coloured, sourced from Iran, China and India in counts 20, 30 and 40.",
     },
     images: [
+      "assets/generated/viscose.webp",
       "assets/products/viscose-01.webp",
       "assets/products/viscose-02.webp",
     ],
