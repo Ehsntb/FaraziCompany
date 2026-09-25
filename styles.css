@@ -205,7 +205,7 @@ svg.icon {
   color: var(--copper);
   white-space: nowrap;
 }
-.hero h1 {
+.hero .hero-brand {
   font-family: Georgia, "Times New Roman", serif;
   font-weight: 400;
   font-size: calc(78 * var(--u));
@@ -214,7 +214,7 @@ svg.icon {
   margin-top: calc(8 * var(--u));
   color: #efefec;
 }
-.hero h1 span {
+.hero .hero-brand span {
   display: block;
   color: var(--copper);
   font-size: calc(35 * var(--u));
@@ -663,6 +663,10 @@ body:has(dialog[open]) {
   background: #f4f1eb;
 }
 .dialog-gallery-stage > img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  object-position: center;
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -854,12 +858,12 @@ html[lang="en"] .contact-item > div {
     font-size: 12px;
     letter-spacing: 1.5px;
   }
-  .hero h1 {
+  .hero .hero-brand {
     font-size: 65px;
     margin-top: 8px;
     line-height: 1;
   }
-  .hero h1 span {
+  .hero .hero-brand span {
     font-size: 30px;
     line-height: 1.2;
   }
@@ -1229,3 +1233,29 @@ html[dir="ltr"] .about-content .panel-button {
   justify-content: center;
   text-decoration: none;
 }
+
+/* Standalone brand symbol uses the site's copper token. */
+.site-header .brand { width: 52px; height: 68px; }
+.site-header .brand img.brand-symbol {
+  position: static; display: block; width: 100%; height: 100%; max-width: 100%; object-fit: contain;
+}
+.company-gallery { columns: 3; column-gap: 12px; }
+.company-gallery button { display: block; width: 100%; padding: 0; cursor: zoom-in; break-inside: avoid; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.company-gallery img { display: block; width: 100%; height: auto; background: var(--surface); }
+.company-gallery button:focus-visible { outline: 2px solid var(--copper); outline-offset: 3px; }
+@media (max-width: 680px) {
+  .site-header .brand { width: 38px; height: 50px; }
+  .company-gallery { columns: 2; column-gap: 8px; }
+  .company-gallery button { margin-bottom: 8px; }
+}
+
+.company-gallery button:hover { border-color: var(--copper); filter: brightness(1.08); }
+
+/* Arrow shapes and positions follow reading direction without bidi mirroring. */
+.gallery-arrow { direction: ltr; }
+html[dir="rtl"] .gallery-prev { left: auto; right: 12px; }
+html[dir="rtl"] .gallery-next { right: auto; left: 12px; }
+.company-viewer .dialog-gallery { margin-top: 0; }
+.company-viewer .dialog-gallery-stage { width: 100%; max-height: 65vh; margin-inline: auto; }
+
+.hero h1.hero-description { font-family: var(--font); font-weight: 500; line-height: 1.8; letter-spacing: 0; }

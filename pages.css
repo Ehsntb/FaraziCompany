@@ -212,6 +212,8 @@
   font-size: calc(11 * var(--u));
 }
 .cooperation-list {
+  list-style: none;
+  padding-inline-start: 0;
   display: grid;
   gap: 10px;
   color: var(--muted);
@@ -897,3 +899,14 @@ html[dir="ltr"] .sourcing-section {
     font-size: 13px;
   }
 }
+
+.yarn-guide { max-width: 960px; padding-block: 28px 56px; }
+.yarn-guide h1 { font-size: clamp(1.65rem, 3vw, 2.6rem); line-height: 1.65; margin: 22px 0; }
+.yarn-guide h2, .yarn-overview h2 { color: var(--copper-light); font-size: 1.35rem; margin: 28px 0 12px; }
+.yarn-guide p, .yarn-overview p { color: var(--muted); line-height: 2.15; margin-block: 14px; }
+.yarn-photo { margin: 24px auto; max-width: 460px; }
+.yarn-photo img { width: 100%; height: auto; max-height: 420px; object-fit: contain; }
+.yarn-photo figcaption, .guide-source { font-size: .8rem; color: var(--muted); }
+.yarn-links { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-block: 24px; }
+.yarn-links a, .yarn-guide p a { color: var(--copper-light); text-decoration: underline; text-underline-offset: 5px; }
+.yarn-overview { padding-block: 24px 48px; }

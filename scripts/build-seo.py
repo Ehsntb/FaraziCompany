@@ -6,9 +6,10 @@ from html.parser import HTMLParser
 from html import escape
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
-import json, subprocess, copy, datetime
+import json, subprocess, copy, datetime, runpy
 
 ROOT = Path(__file__).resolve().parent.parent
+runpy.run_path(str(ROOT / "scripts/build-gallery.py"))["build"]()
 VOID = set("area base br col embed hr img input link meta param source track wbr".split())
 
 class Node:
@@ -82,7 +83,7 @@ for page,translations in config["pages"].items():
                 else:
                     n.attrs.pop("data-fa",None)
             if lang=="en":
-                labels={"فرازی کمپانی، صفحه اصلی":"Farazi Company, home","منوی اصلی":"Main navigation","زبان سایت":"Site language","باز کردن منو":"Open menu","بستن پنجره":"Close dialog","مسیر صفحه":"Breadcrumb","راه‌های ارتباطی":"Contact methods","مزیت‌های فرازی کمپانی":"Why Farazi Company","تصویرسازی الهام‌گرفته از معماری بازار تهران":"Illustration inspired by Tehran Bazaar architecture","تصویرسازی معماری بازار تهران":"Illustration of Tehran Bazaar architecture","نخ‌های پنبه‌ای، مشکی و مسی در کنار یکدیگر":"Ivory, black and copper yarn spools","نقشه ارتباطات تجاری در سراسر جهان":"Illustration of global trade connections","تجربه و همکاری":"Experience and cooperation"}
+                labels={"فرازی کمپانی، صفحه اصلی":"Farazi Company, home","منوی اصلی":"Main navigation","زبان سایت":"Site language","باز کردن منو":"Open menu","بستن پنجره":"Close dialog","مسیر صفحه":"Breadcrumb","راه‌های ارتباطی":"Contact methods","مزیت‌های فرازی کمپانی":"Why Farazi Company","تصویرسازی الهام‌گرفته از معماری بازار تهران":"Illustration inspired by Tehran Bazaar architecture","تصویرسازی معماری بازار تهران":"Illustration of Tehran Bazaar architecture","نخ‌های پنبه‌ای، مشکی و مسی در کنار یکدیگر":"Ivory, black and copper yarn spools","نقشه ارتباطات تجاری در سراسر جهان":"Illustration of global trade connections","تجربه و همکاری":"Experience and cooperation", "نمونه نخ لمه و متالیک از تصاویر محصولات فرازی کمپانی":"Metallic yarn sample from Farazi Company product photographs", "راهنمای نخ":"Yarn guides"}
                 for attr in ("aria-label","alt"):
                     if n.attrs.get(attr) in labels: n.attrs[attr]=labels[n.attrs[attr]]
             if n.tag=="html": n.attrs.update(lang=lang,dir="rtl" if lang=="fa" else "ltr")
@@ -142,14 +143,20 @@ for page,translations in config["pages"].items():
                 metadata+='<link data-seo="true" rel="alternate" hreflang="'+target+'" href="'+esc(absolute(file_for(page,"fa" if target=="x-default" else target)))+'">\n'
             metadata+=meta("og:url",url,True)+meta("og:image",absolute(config["socialImage"]),True)+meta("og:image:alt","Farazi Company textile yarns",True)+meta("twitter:image",absolute(config["socialImage"]))
             schema.update(url=url)
-            schema["publisher"].update({"@id":absolute("index.html")+"#organization","url":absolute("index.html"),"logo":absolute("logo/farazi-logo-transparent.png")})
+            schema["publisher"].update({"@id":absolute("index.html")+"#organization","url":absolute("index.html"),"logo":absolute("logo/farazi-symbol-copper.svg")})
             if page!="index":
                 schema["breadcrumb"]={"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"خانه" if lang=="fa" else "Home","item":absolute(file_for("index",lang))},{"@type":"ListItem","position":2,"name":info["title"],"item":url}]}
+        if page in ("lame-yarn", "fancy-yarn") and base:
+            schema["breadcrumb"]["itemListElement"] = [
+                {"@type":"ListItem", "position":1, "name":"خانه" if lang=="fa" else "Home", "item":absolute(file_for("index",lang))},
+                {"@type":"ListItem", "position":2, "name":"انواع نخ" if lang=="fa" else "Yarns", "item":absolute(file_for("products",lang))},
+                {"@type":"ListItem", "position":3, "name":info["title"], "item":url},
+            ]
         if page=="products":
             schema["mainEntity"]={"@type":"ItemList","numberOfItems":len(products),"itemListElement":[{"@type":"ListItem","position":i+1,"item":{"@type":"Thing","name":p["name"][lang],"description":p["description"][lang],**({"image":absolute(p["images"][0])} if base else {})}} for i,p in enumerate(products)]}
         metadata+='<script data-seo="true" type="application/ld+json">'+json.dumps(schema,ensure_ascii=False).replace("<","\\u003c")+'</script>\n'
         head.children.extend(parse(metadata).children)
-        (ROOT/file_for(page,lang)).write_text(root.html(),encoding="utf-8")
+        (ROOT/file_for(page,lang)).write_text("\n".join(line.rstrip() for line in root.html().splitlines()) + "\n",encoding="utf-8")
 robots="User-agent: *\nAllow: /\n"
 if base:
     robots+="\nSitemap: "+absolute("sitemap.xml")+"\n"
@@ -157,6 +164,6 @@ if base:
 elif (ROOT/"sitemap.xml").exists():
     raise ValueError("Existing sitemap found but siteUrl is empty. Set the production URL before regenerating.")
 (ROOT/"robots.txt").write_text(robots,encoding="utf-8")
-print("Generated 8 static pages, product HTML, social metadata, schema and robots.txt.")
+print(f"Generated {len(config['pages']) * 2} static pages, product HTML, social metadata, schema and robots.txt.")
 print("Canonical/hreflang/sitemap ready." if base else "Production domain pending: set siteUrl in seo-config.json and rerun.")
 

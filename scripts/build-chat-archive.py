@@ -7,6 +7,7 @@ import argparse
 import html
 import re
 import shutil
+import time
 from urllib.parse import quote
 from dataclasses import dataclass
 from datetime import datetime
@@ -494,9 +495,32 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("export_dir", type=Path, help="Directory containing _chat.txt and attachments")
     parser.add_argument("output", type=Path, help="Destination HTML file")
+    parser.add_argument("--watch", action="store_true", help="Rebuild when chat or attachments change")
     args = parser.parse_args()
 
-    export_dir = args.export_dir.resolve()
+    if not args.watch:
+        build_archive(args.export_dir, args.output)
+        return
+    previous = None
+    try:
+        while True:
+            current = tuple(sorted((str(p), p.stat().st_size, p.stat().st_mtime_ns)
+                                   for p in args.export_dir.iterdir() if p.is_file()))
+            if current != previous:
+                # Allow a file copy to settle; retry incomplete exports on the next scan.
+                time.sleep(1)
+                try:
+                    build_archive(args.export_dir, args.output)
+                    previous = current
+                except (OSError, ValueError, SystemExit) as error:
+                    print(f"Waiting for complete export: {error}", flush=True)
+            time.sleep(1)
+    except KeyboardInterrupt:
+        pass
+
+
+def build_archive(export_dir: Path, output: Path) -> None:
+    export_dir = export_dir.resolve()
     chat_path = export_dir / "_chat.txt"
     if not chat_path.is_file():
         raise SystemExit(f"Chat export not found: {chat_path}")
@@ -511,7 +535,7 @@ def main() -> None:
         raise SystemExit("Missing attachments: " + ", ".join(missing))
 
     redacted_count = redact_credentials(messages)
-    output = args.output.resolve()
+    output = output.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     media_dir = output.parent / "farazi-whatsapp-media"
     media_dir.mkdir(parents=True, exist_ok=True)

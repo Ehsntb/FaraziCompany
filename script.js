@@ -20,6 +20,7 @@ const dialog = document.querySelector("#detail-dialog");
 const dialogContent = document.querySelector("#dialog-content");
 let currentDialog = null;
 let activeGalleryIndex = 0;
+let companyImageIndex = null;
 const translatable = [...document.querySelectorAll("[data-en]")];
 translatable.forEach((element) => {
   element.dataset.fa ||= element.innerHTML;
@@ -128,55 +129,27 @@ function contactButton() {
     "</a>"
   );
 }
+function renderImageGallery(images, selected, title, prefix) {
+  const controls = images.length > 1;
+  const arrow = (step, label, icon) => '<button type="button" class="gallery-arrow gallery-' +
+    (step < 0 ? 'prev' : 'next') + '" data-' + prefix + '-step="' + step + '" aria-label="' + label + '">' + icon + '</button>';
+  return '<div class="dialog-gallery"><div class="dialog-gallery-stage"><img src="' +
+    escapeHtml(images[selected]) + '" alt="' + escapeHtml(title) + ' — ' + (selected + 1) + '">' +
+    (controls ? arrow(-1, t("تصویر قبلی", "Previous image"), t('›', '‹')) +
+      arrow(1, t("تصویر بعدی", "Next image"), t('‹', '›')) +
+      '<span class="gallery-counter" aria-live="polite">' + (selected + 1) + ' / ' + images.length + '</span>' : '') +
+    '</div>' + (controls ? '<div class="dialog-thumbnails" role="list" aria-label="' + t("انتخاب تصویر", "Choose an image") + '">' +
+      images.map((src, index) => '<button type="button" role="listitem" data-' + prefix + '-index="' + index +
+        '" class="' + (index === selected ? 'is-active' : '') + '" aria-label="' + t("تصویر ", "Image ") + (index + 1) +
+        '"><img src="' + escapeHtml(src) + '" alt="" loading="lazy" decoding="async"></button>').join('') + '</div>' : '') + '</div>';
+}
 function renderDialog(kind) {
+  const thumbnailScroll = dialogContent.querySelector(".dialog-thumbnails")?.scrollLeft || 0;
   const product = products.find((item) => item.id === kind);
   if (product) {
-    const selectedImage = product.images[activeGalleryIndex] || product.image;
-    const multipleImages = product.images.length > 1;
-    const thumbnails = multipleImages
-      ? '<div class="dialog-thumbnails" role="list" aria-label="' +
-        t("انتخاب تصویر", "Choose an image") +
-        '">' +
-        product.images
-          .map(
-            (image, index) =>
-              '<button type="button" role="listitem" data-gallery-index="' +
-              index +
-              '" class="' +
-              (index === activeGalleryIndex ? "is-active" : "") +
-              '" aria-label="' +
-              t("تصویر ", "Image ") +
-              (index + 1) +
-              '"><img src="' +
-              escapeHtml(image) +
-              '" alt="" loading="lazy" decoding="async"></button>',
-          )
-          .join("") +
-        "</div>"
-      : "";
     dialogContent.innerHTML =
-      '<div class="dialog-product">' +
-      '<div class="dialog-gallery"><div class="dialog-gallery-stage"><img src="' +
-      escapeHtml(selectedImage) +
-      '" alt="' +
-      escapeHtml(product.name[language]) +
-      " — " +
-      (activeGalleryIndex + 1) +
-      '">' +
-      (multipleImages
-        ? '<button type="button" class="gallery-arrow gallery-prev" data-gallery-step="-1" aria-label="' +
-          t("تصویر قبلی", "Previous image") +
-          '">‹</button><button type="button" class="gallery-arrow gallery-next" data-gallery-step="1" aria-label="' +
-          t("تصویر بعدی", "Next image") +
-          '">›</button><span class="gallery-counter" aria-live="polite">' +
-          (activeGalleryIndex + 1) +
-          " / " +
-          product.images.length +
-          "</span>"
-        : "") +
-      "</div>" +
-      thumbnails +
-      '</div><div class="dialog-product-copy"><h2 id="dialog-title">' +
+      '<div class="dialog-product">' + renderImageGallery(product.images, activeGalleryIndex, product.name[language], "gallery") +
+      '<div class="dialog-product-copy"><h2 id="dialog-title">' +
       escapeHtml(product.name[language]) +
       "</h2><p class=\"dialog-description\">" +
       escapeHtml(product.description[language]) +
@@ -188,7 +161,22 @@ function renderDialog(kind) {
       "</p>" +
       contactButton() +
       "</div></div>";
-  } else if (kind === "catalog" || kind === "gallery") {
+  } else if (kind === "gallery") {
+    const images = window.FARAZI_GALLERY || [];
+    if (companyImageIndex !== null && images[companyImageIndex]) {
+      dialogContent.innerHTML = '<div class="company-viewer"><h2 id="dialog-title" hidden>' +
+        t("گالری فرازی کمپانی", "Farazi Company gallery") +
+        '</h2>' + renderImageGallery(images, companyImageIndex, t("گالری فرازی کمپانی", "Farazi Company gallery"), "company") + '</div>';
+    } else {
+      dialogContent.innerHTML = '<h2 id="dialog-title">' + t("گالری فرازی کمپانی", "Farazi Company gallery") +
+        '</h2><div class="company-gallery">' + images.map((src, index) =>
+          '<button type="button" data-company-image="' + index + '" aria-label="' +
+          t("نمایش تصویر ", "Open image ") + (index + 1) + '"><img src="' + escapeHtml(src) +
+          '" alt="' + t("گالری فرازی کمپانی، تصویر ", "Farazi Company gallery, image ") +
+          (index + 1) + '" loading="lazy" decoding="async"></button>'
+        ).join("") + '</div>' + (images.length ? '' : '<p>' + t("هنوز تصویری اضافه نشده است.", "No images yet.") + '</p>');
+    }
+  } else if (kind === "catalog") {
     dialogContent.innerHTML =
       '<h2 id="dialog-title">' +
       (kind === "catalog"
@@ -241,13 +229,59 @@ function renderDialog(kind) {
       "</p>" +
       contactButton();
   }
+  const strip = dialogContent.querySelector(".dialog-thumbnails");
+  if (strip) {
+    strip.scrollLeft = thumbnailScroll;
+    requestAnimationFrame(() => {
+      if (!strip.isConnected) return;
+      const active = strip.querySelector(".is-active");
+      if (!active) return;
+      const viewport = strip.getBoundingClientRect();
+      const selected = active.getBoundingClientRect();
+      strip.scrollBy({
+        left: selected.left + selected.width / 2 - viewport.left - viewport.width / 2,
+        behavior: "instant",
+      });
+    });
+  }
+}
+let galleryRequest = 0;
+async function refreshGallery() {
+  if (location.protocol === "file:") return;
+  const request = ++galleryRequest;
+  try {
+    const response = await fetch("gallery.php", { cache: "no-store" });
+    if (!response.ok) throw new Error("Gallery unavailable");
+    const images = await response.json();
+    if (!Array.isArray(images) || !images.every(src => typeof src === "string" && /^assets\/gallery\/[^/]+$/.test(src))) {
+      throw new Error("Invalid gallery response");
+    }
+    if (request !== galleryRequest) return;
+    const selected = (window.FARAZI_GALLERY || [])[companyImageIndex];
+    window.FARAZI_GALLERY = images;
+    if (companyImageIndex !== null) {
+      const index = images.indexOf(selected);
+      companyImageIndex = index >= 0 ? index : null;
+    }
+    if (currentDialog === "gallery" && dialog.open) renderDialog("gallery");
+  } catch {
+    // Keep the bundled list usable for local previews or temporary server errors.
+  }
 }
 function openDialog(kind) {
   currentDialog = kind;
+  if (kind === "gallery") companyImageIndex = null;
   if (products.some((item) => item.id === kind)) activeGalleryIndex = 0;
   renderDialog(kind);
   if (!dialog.open) dialog.showModal();
   dialog.querySelector(".dialog-close").focus();
+  if (kind === "gallery") refreshGallery();
+}
+function moveCompanyImage(step) {
+  const count = (window.FARAZI_GALLERY || []).length;
+  if (!count || companyImageIndex === null) return;
+  companyImageIndex = (companyImageIndex + step + count) % count;
+  renderDialog("gallery");
 }
 function moveGallery(step) {
   const product = products.find((item) => item.id === currentDialog);
@@ -257,6 +291,27 @@ function moveGallery(step) {
   renderDialog(currentDialog);
 }
 document.addEventListener("click", (event) => {
+  const companyIndex = event.target.closest("[data-company-index]");
+  if (companyIndex) {
+    companyImageIndex = Number(companyIndex.dataset.companyIndex);
+    renderDialog("gallery");
+    dialogContent.querySelector('[data-company-index="' + companyImageIndex + '"]').focus();
+    return;
+  }
+  const companyImage = event.target.closest("[data-company-image]");
+  const companyStep = event.target.closest("[data-company-step]");
+  if (companyImage) {
+    companyImageIndex = Number(companyImage.dataset.companyImage);
+    renderDialog("gallery");
+    dialog.querySelector(".dialog-close").focus();
+    return;
+  }
+  if (companyStep) {
+    const step = companyStep.dataset.companyStep;
+    moveCompanyImage(Number(step));
+    dialogContent.querySelector('[data-company-step="' + step + '"]').focus();
+    return;
+  }
   const galleryIndex = event.target.closest("[data-gallery-index]");
   const galleryStep = event.target.closest("[data-gallery-step]");
   if (galleryIndex) {
@@ -308,8 +363,14 @@ nav.addEventListener("click", (event) => {
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeMenu();
-  if (dialog.open && event.key === "ArrowLeft") moveGallery(-1);
-  if (dialog.open && event.key === "ArrowRight") moveGallery(1);
+  if (dialog.open && currentDialog === "gallery" && companyImageIndex !== null && ["ArrowLeft", "ArrowRight"].includes(event.key)) {
+    event.preventDefault();
+    moveCompanyImage(event.key === "ArrowLeft" ? (language === "fa" ? 1 : -1) : (language === "fa" ? -1 : 1));
+    dialog.querySelector(".dialog-close").focus();
+    return;
+  }
+  if (dialog.open && event.key === "ArrowLeft") moveGallery(language === "fa" ? 1 : -1);
+  if (dialog.open && event.key === "ArrowRight") moveGallery(language === "fa" ? -1 : 1);
 });
 function setLanguage(value) {
   language = value;

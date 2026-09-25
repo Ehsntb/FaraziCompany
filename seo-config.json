@@ -5,7 +5,7 @@
   "pages": {
     "index": {
       "fa": {
-        "title": "فرازی کمپانی | تأمین نخ و مواد اولیه نساجی",
+        "title": "تأمین انواع نخ و نخ لمه | فرازی کمپانی",
         "description": "فرازی کمپانی با بیش از ۴۰ سال تجربه در بازار نساجی و ۱۵ سال تخصص در نخ لمه؛ تأمین، واردات، صادرات و تجارت انواع نخ و مواد اولیه نساجی."
       },
       "en": {
@@ -15,7 +15,7 @@
     },
     "products": {
       "fa": {
-        "title": "انواع نخ و مواد اولیه نساجی | محصولات فرازی کمپانی",
+        "title": "انواع نخ؛ مشخصات و استعلام خرید | فرازی کمپانی",
         "description": "مشاهده تصاویر و مشخصات نخ لمه و متالیک، پنبه، اسپان، پلی‌استر، ترویرا، فیلامنت، ویسکوز، پلی‌استر ویسکوز و کش لاکرا."
       },
       "en": {
@@ -41,6 +41,26 @@
       "en": {
         "title": "Contact Farazi Company | Yarn & Sourcing Inquiries",
         "description": "Find Farazi Company in Tehran Grand Bazaar or contact us by phone, fax, WhatsApp, Telegram or email for yarn and sourcing inquiries."
+      }
+    },
+    "lame-yarn": {
+      "fa": {
+        "title": "نخ لمه و متالیک؛ مشخصات و استعلام خرید | فرازی کمپانی",
+        "description": "مشخصات نخ لمه، سیم زری و گلابتون؛ کدها، رنگ‌ها، نمره و ضخامت‌های معرفی‌شده و اطلاعات لازم برای استعلام خرید از فرازی کمپانی."
+      },
+      "en": {
+        "title": "Metallic Yarn Specifications & Enquiries | Farazi Company",
+        "description": "Explore metallic yarn types, colours, sizes and thicknesses, and prepare a sourcing enquiry with Farazi Company."
+      }
+    },
+    "fancy-yarn": {
+      "fa": {
+        "title": "نخ فانتزی چیست؟ راهنمای انتخاب و استعلام | فرازی کمپانی",
+        "description": "راهنمای نخ فانتزی، تفاوت جلوه‌های بوکله و اسلاب و اطلاعات لازم برای بررسی نمونه و امکان تأمین؛ کاربرد، جنس، نمره، رنگ و مقدار."
+      },
+      "en": {
+        "title": "Fancy Yarn Selection & Enquiry Guide | Farazi Company",
+        "description": "Understand fancy yarn effects and the sample details needed to discuss sourcing: application, fibre, count, colour and quantity."
       }
     }
   }
