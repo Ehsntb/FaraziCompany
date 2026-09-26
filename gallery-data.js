@@ -10,7 +10,6 @@ window.FARAZI_GALLERY = [
   "assets/gallery/IMG_6869.JPG",
   "assets/gallery/IMG_6872.JPG",
   "assets/gallery/IMG_6876.JPG",
-  "assets/gallery/IMG_6877.JPG",
   "assets/gallery/IMG_6879.JPG",
   "assets/gallery/IMG_6924.JPG",
   "assets/gallery/IMG_6925.JPG",
@@ -101,5 +100,5 @@ window.FARAZI_GALLERY = [
   "assets/gallery/IMG_7022.JPG",
   "assets/gallery/IMG_7023.JPG",
   "assets/gallery/IMG_7024.JPG",
-  "assets/gallery/IMG_7025.JPG"
+  "assets/gallery/IMG_7025.JPG",
 ];
