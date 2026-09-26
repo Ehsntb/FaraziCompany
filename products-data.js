@@ -10,8 +10,8 @@ window.FARAZI_PRODUCTS = [
       "en": "Lurex, metallic, zari and golabatoon yarns in silver, gold, transparent, black and assorted colours.\nTypes: MH, MX, M, SD | Counts: 1/100, 1/92, 1/69, 1/32 | Thickness: 12, 15, 20, 23 and 25 microns"
     },
     "images": [
-      "assets/products/metallic-02.webp",
       "assets/generated/metallic.webp",
+      "assets/products/metallic-02.webp",
       "assets/products/metallic-01.webp",
       "assets/products/metallic-03.webp",
       "assets/products/metallic-04.webp",
