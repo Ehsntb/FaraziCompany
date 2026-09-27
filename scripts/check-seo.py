@@ -1,6 +1,7 @@
 """Check static or PHP-rendered SEO output. Usage: python scripts/check-seo.py [--base-url http://127.0.0.1:8082/]"""
 import argparse
 import json
+import re
 from html import unescape
 from html.parser import HTMLParser
 from pathlib import Path
@@ -23,6 +24,19 @@ class Page(HTMLParser):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--base-url');args=parser.parse_args()
+    source=(ROOT/'products-data.js').read_text(encoding='utf-8-sig')
+    match=re.search(r'window\.FARAZI_PRODUCTS\s*=\s*(\[.*\])\s*;',source,re.S)
+    assert match, 'products-data.js: missing product array'
+    try:
+        products=json.loads(match[1])
+    except json.JSONDecodeError as error:
+        raise AssertionError('products-data.js must contain valid JSON: quote all keys and remove trailing commas. '+str(error)) from error
+    for product in products:
+        for lang in ('fa','en'):
+            assert product['name'][lang] and product['description'][lang], 'Missing product translation'
+        assert product['images'], 'Missing product images'
+        for image in product['images']:
+            assert (ROOT/image).is_file(), image
     config=json.loads((ROOT/'seo-config.json').read_text(encoding='utf-8'));domain=config['siteUrl'].rstrip('/')
     def read(name):
         if args.base_url:
