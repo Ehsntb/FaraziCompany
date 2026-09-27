@@ -139,8 +139,7 @@ window.FARAZI_PRODUCTS = [
       "assets/products/Fancy_yarns_13.JPG",
       "assets/products/Fancy_yarns_14.JPG",
       "assets/products/Fancy_yarns_15.JPG",
-      "assets/products/Fancy_yarns_16.JPG",
-      "assets/products/Fancy_yarns_17.JPG"
+      "assets/products/Fancy_yarns_16.JPG"
     ],
     "featured": false,
     "showOnHome": true
