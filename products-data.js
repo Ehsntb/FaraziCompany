@@ -143,5 +143,21 @@ window.FARAZI_PRODUCTS = [
     ],
     "featured": false,
     "showOnHome": true
+  },
+  {
+    "name": {
+      "fa": "الیاف پنبه",
+      "en": "Cotton Fiber"
+    },
+    "description": {
+      "fa": "انواع الیاف پنبه ایرانی، تاجیک و افغان، مناسب ریس نخ پنبه در نمرات ۱۰، ۲۰، ۲۶، ۲۸، ۳۰ و ۴۰، در کیفیت‌های کامپکت، سوپر، شانه، کارد و اپن‌اند.",
+      "en": "Iranian, Tajik and Afghan cotton fibers suitable for spinning cotton yarn in counts 10, 20, 26, 28, 30 and 40, available for Compact, Super, Combed, Carded and Open-End yarn production."
+    },
+    "images": [
+      "assets/products/Cotton_001.jpg",
+      "assets/products/Cotton_002.jpg",
+    ],
+    "featured": false,
+    "showOnHome": true
   }
 ];
