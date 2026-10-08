@@ -4,7 +4,7 @@ document.querySelectorAll("[data-copyright-year]").forEach(element => {
   element.textContent = String(new Date().getFullYear());
 });
 const pageId = document.body.dataset.page || "home";
-const products = (window.FARAZI_PRODUCTS || []).map((product, index) => {
+const products = (window.FARAZI_PRODUCTS || []).filter(product => product.visible !== false).map((product, index) => {
   const images = Array.isArray(product.images)
     ? product.images.filter(Boolean)
     : [product.image].filter(Boolean);

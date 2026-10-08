@@ -34,6 +34,7 @@ function render_site($route) {
     $source = file_get_contents($root . '/products-data.js');
     if (!preg_match('/window\.FARAZI_PRODUCTS\s*=\s*(\[.*\])\s*;/s', $source, $data)) throw new RuntimeException('Invalid products data');
     $products = json_decode($data[1], true, 512, JSON_THROW_ON_ERROR);
+    $products = array_values(array_filter($products, fn($product) => ($product['visible'] ?? true) !== false));
     foreach ($products as $product) {
         foreach (['fa','en'] as $locale) if (empty($product['name'][$locale]) || empty($product['description'][$locale])) throw new RuntimeException('Missing product translation');
         if (empty($product['images'])) throw new RuntimeException('Missing product image');

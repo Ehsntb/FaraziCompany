@@ -59,6 +59,7 @@ def absolute(path): return base+"/"+path
 products=json.loads(subprocess.check_output(["node","-e",
     "global.window={};require('./products-data.js');process.stdout.write(JSON.stringify(window.FARAZI_PRODUCTS));"],
     cwd=ROOT,encoding="utf-8"))
+products = [p for p in products if p.get('visible', True) is not False]
 for p in products:
     for lang in ("fa","en"):
         assert p["name"][lang] and p["description"][lang], "Missing product translation"

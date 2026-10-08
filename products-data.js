@@ -155,7 +155,7 @@ window.FARAZI_PRODUCTS = [
     },
     "images": [
       "assets/products/Cotton_001.jpg",
-      "assets/products/Cotton_002.jpg",
+      "assets/products/Cotton_002.jpg"
     ],
     "featured": false,
     "showOnHome": true

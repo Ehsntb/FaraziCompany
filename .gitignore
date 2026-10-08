@@ -4,3 +4,5 @@ private/*
 !private/farazi-whatsapp-media/
 __pycache__/
 .htaccess
+!admin/.htaccess
+!private/.htaccess

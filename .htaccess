@@ -9,7 +9,7 @@ RewriteRule ^(?:scripts|private)(?:/|$) - [F,L,NC]
 RewriteRule (^|/)\.(?!well-known(?:/|$)) - [F,L,NC]
 
 # PHP can still read these files locally; only HTTP access is denied.
-<FilesMatch "(?i)^(?:seo-config\.json|README\.md|SEO-NOTES\.md|AGENTS\.md|router\.php)$">
+<FilesMatch "(?i)^(?:seo-config\.json|README\.md|SEO-NOTES\.md|ADMIN-GUIDE\.md|AGENTS\.md|router\.php)$">
     Require all denied
 </FilesMatch>
 
