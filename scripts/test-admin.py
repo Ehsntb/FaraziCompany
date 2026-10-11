@@ -14,7 +14,7 @@ def main():
         root=Path(directory)
         for name in ['admin','scripts','logo']:
             shutil.copytree(ROOT/name,root/name)
-        for name in ['products-data.js','router.php','site.php','seo-config.json']:
+        for name in ['products-data.js','router.php','site.php','seo-config.json','gallery.php']:
             shutil.copy2(ROOT/name,root/name)
         for path in ROOT.glob('*.html'): shutil.copy2(path,root/path.name)
         for name in ['styles.css','pages.css','script.js','gallery-data.js']:
@@ -25,6 +25,7 @@ def main():
         for product in products:
             for name in product['images']:
                 target=root/name; target.parent.mkdir(parents=True,exist_ok=True); shutil.copy2(ROOT/name,target)
+        (root/'assets/gallery').mkdir()
         setup=subprocess.check_output(['php','scripts/setup-admin.php'],cwd=root,text=True)
         token=re.search(r'setup=([a-f0-9]+)',setup)[1]
         proc=subprocess.Popen(['php','-S','127.0.0.1:8093','router.php'],cwd=root,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
@@ -36,7 +37,7 @@ def main():
                 try: get('admin/'); break
                 except OSError: time.sleep(.1)
             def fields(html): return dict(re.findall(r'<input type="hidden" name="([^"]+)" value="([^"]*)"',html))
-            def post(data, files=None):
+            def post(data, files=None, path='admin/'):
                 if files:
                     boundary='FaraziTestBoundary'; body=b''
                     for k,v in data.items(): body+=f'--{boundary}\r\nContent-Disposition: form-data; name="{k}"\r\n\r\n{v}\r\n'.encode()
@@ -44,7 +45,7 @@ def main():
                         body+=f'--{boundary}\r\nContent-Disposition: form-data; name="photos[]"; filename="{name}"\r\nContent-Type: application/octet-stream\r\n\r\n'.encode()+content+b'\r\n'
                     body+=f'--{boundary}--\r\n'.encode(); mime='multipart/form-data; boundary='+boundary
                 else: body=urlencode(data).encode(); mime='application/x-www-form-urlencoded'
-                return client.open(Request(base+'admin/',body,{'Content-Type':mime})).read().decode()
+                return client.open(Request(base+path,body,{'Content-Type':mime})).read().decode()
             def catalog(): return json.loads(re.search(r'=\s*(\[.*\])\s*;', (root/'products-data.js').read_text(encoding='utf-8'),re.S)[1])
             assert 'name="password"' not in get('admin/')
             html=get('admin/?setup='+token)
@@ -65,6 +66,24 @@ def main():
             post(form,[('photo.php.png',image.getvalue())]); assert len(catalog())==len(products)+1
             assert catalog()[-1]['name']['fa']=='محصول آزمایشی'; assert catalog()[-1]['images'][0].endswith('.png')
             assert len(list((root/'private/admin').glob('products-*.js')))==1
+            gallery_path='admin/?section=gallery'
+            html=get(gallery_path); gallery_form={**fields(html),'action':'gallery_upload'}
+            post({**gallery_form,'csrf':'invalid'},[('test.png',image.getvalue())],gallery_path)
+            assert json.loads(get('gallery.php'))==[]
+            post(gallery_form,[('bad.png',b'<?php echo 1;')],gallery_path)
+            assert json.loads(get('gallery.php'))==[]
+            post(gallery_form,[('test.png',image.getvalue()),('test2.png',image.getvalue())],gallery_path)
+            gallery=json.loads(get('gallery.php')); assert len(gallery)==2
+            filename=gallery[0].split('/')[-1]
+            delete_form={**fields(get(gallery_path)),'action':'gallery_delete','selected[]':filename}
+            post(delete_form,path=gallery_path); assert len(json.loads(get('gallery.php')))==2
+            post({**delete_form,'selected[]':'../products-data.js','confirm_delete':'on'},path=gallery_path)
+            assert len(json.loads(get('gallery.php')))==2
+            post({**delete_form,'confirm_delete':'on'},path=gallery_path)
+            assert len(json.loads(get('gallery.php')))==1
+            assert list((root/'private/admin').glob('gallery-deleted-*/'+filename))
+            post({**delete_form,'confirm_delete':'on'},path=gallery_path)
+            assert len(json.loads(get('gallery.php')))==1
             idx=len(products); html=get(f'admin/?edit={idx}'); stale=fields(html)
             post({**stale,'name':'پنهان آزمایشی','description':'توضیح تازه','showOnHome':'on'})
             assert catalog()[-1]['visible'] is False
@@ -79,7 +98,7 @@ def main():
             for _ in range(5): post({**fields(get('admin/')),'action':'login','password':'incorrect'})
             html=post({**fields(get('admin/')),'action':'login','password':'local-test-only-2026'}); assert '?edit=new' not in html
             (root/'private/admin/attempts.json').write_text('{}')
-            print('PASS: setup, token replay, login/logout, CSRF, upload validation, create, hide, conflicts, delete confirmation, backups, throttling, protected paths and 12 public pages.',flush=True)
+            print('PASS: setup, token replay, login/logout, CSRF, product CRUD, gallery upload/delete/backups, traversal rejection, conflicts, throttling, protected paths and 12 public pages.',flush=True)
             if args.preview:
                 print('Preview: http://127.0.0.1:8093/admin/ | disposable password: local-test-only-2026',flush=True)
                 while True: time.sleep(1)

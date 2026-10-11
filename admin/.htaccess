@@ -1,5 +1,5 @@
 DirectoryIndex index.php
 Options -Indexes
-<FilesMatch "^(?:lib)\.php$">
+<FilesMatch "^(?:lib|gallery-view)\.php$">
     Require all denied
 </FilesMatch>

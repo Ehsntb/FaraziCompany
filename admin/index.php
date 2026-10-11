@@ -18,6 +18,7 @@ if (!empty($_SESSION['auth'])) $_SESSION['last'] = time();
 $setup = (string)($_POST['setup'] ?? $_GET['setup'] ?? '');
 $isSetup = isset($c['setup']) && hash_equals($c['setup'], hash('sha256', $setup));
 $edit = (string)($_POST['id'] ?? $_GET['edit'] ?? '');
+$galleryView = ($_GET['section'] ?? '') === 'gallery';
 $products = []; $revision = ''; $lock = null;
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -48,6 +49,18 @@ try {
             header('Location: ./'); exit;
         } else {
             if (empty($_SESSION['auth']) || ($_SESSION['version'] ?? '') !== ($c['password'] ?? '')) throw new RuntimeException('ابتدا وارد پنل شوید.');
+            if ($galleryView && in_array($action, ['gallery_upload','gallery_delete'], true)) {
+                if ($action === 'gallery_upload') {
+                    $uploaded = upload_photos('gallery');
+                    if (!$uploaded) throw new RuntimeException('ابتدا حداقل یک عکس انتخاب کنید.');
+                    $_SESSION['notice'] = count($uploaded) . ' عکس به گالری اضافه شد.';
+                } else {
+                    if (empty($_POST['confirm_delete'])) throw new RuntimeException('برای حذف عکس‌ها، کادر تأیید را علامت بزنید.');
+                    remove_gallery_photos((array)($_POST['selected'] ?? []));
+                    $_SESSION['notice'] = 'عکس‌های انتخاب‌شده از گالری برداشته شدند؛ نسخه پشتیبان محفوظ است.';
+                }
+                header('Location: ./?section=gallery'); exit;
+            }
             $products = read_products();
             if (!hash_equals(revision(), (string)($_POST['revision'] ?? ''))) throw new RuntimeException('محصولات در صفحه دیگری تغییر کرده‌اند. صفحه را تازه کنید تا تغییرات قبلی از بین نروند.');
             if ($edit !== 'new' && (!ctype_digit($edit) || !isset($products[(int)$edit]))) throw new RuntimeException('محصول پیدا نشد.');
@@ -80,7 +93,7 @@ try {
 } catch (Throwable $e) { error_log('Admin: ' . $e->getMessage()); $error=$e instanceof RuntimeException ? $e->getMessage() : 'ذخیره انجام نشد. تنظیمات و دسترسی نوشتن هاست را بررسی کنید.'; }
 finally { if (is_resource($lock)) { flock($lock,LOCK_UN); fclose($lock); } }
 $authenticated = !empty($_SESSION['auth']);
-if ($authenticated) {
+if ($authenticated && !$galleryView) {
     try {
         $readLock=fopen(STORE . '/write.lock','c');
         if (!$readLock || !flock($readLock,LOCK_SH)) throw new RuntimeException('Storage unavailable');
@@ -92,7 +105,9 @@ if ($authenticated) {
 <html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>مدیریت محصولات | فرازی کمپانی</title><link rel="stylesheet" href="admin.css"><script src="admin.js" defer></script></head><body>
 <header><div class="brand"><img src="../logo/farazi-symbol-copper.svg" alt=""><strong>فرازی کمپانی</strong></div><nav><a href="../index.html" target="_blank" rel="noopener">مشاهده سایت</a><?php if($authenticated): ?><form method="post"><?php token_field(); ?><button class="secondary" name="action" value="logout">خروج</button></form><?php endif ?></nav></header>
 <main><?php if($error): ?><div class="notice error" role="alert"><?=h($error)?></div><?php endif ?><?php if($notice): ?><div class="notice" role="status"><?=h($notice)?></div><?php endif ?>
-<?php if(!$authenticated): ?>
+<?php if($authenticated): ?><nav class="sections" aria-label="بخش‌های مدیریت"><a class="button <?=!$galleryView?'':'secondary'?>" href="./" <?=!$galleryView?'aria-current="page"':''?>>محصولات</a><a class="button <?=$galleryView?'':'secondary'?>" href="?section=gallery" <?=$galleryView?'aria-current="page"':''?>>گالری</a></nav><?php endif ?>
+<?php if($authenticated && $galleryView): require __DIR__ . '/gallery-view.php'; ?>
+<?php elseif(!$authenticated): ?>
 <section class="panel login"><h1><?=$isSetup?'ساخت رمز ورود':'ورود به پنل'?></h1>
 <?php if(!$c || (isset($c['setup']) && !$isSetup)): ?><p>پنل هنوز فعال نشده است. برای راه‌اندازی، راهنمای مدیریت محصولات را در اختیار مسئول سایت بگذارید.</p>
 <?php else: ?><p><?=$isSetup?'یک رمز طولانی انتخاب کنید و آن را در جای امن نگه دارید.':'برای مدیریت محصولات، رمز خود را وارد کنید.'?></p><form method="post"><?php token_field(); ?><input type="hidden" name="setup" value="<?=h($setup)?>"><label>رمز ورود<input type="password" name="password" autocomplete="<?=$isSetup?'new-password':'current-password'?>" required <?=$isSetup?'minlength="12"':''?>></label><?php if($isSetup): ?><label>تکرار رمز<input type="password" name="confirm" autocomplete="new-password" required></label><?php endif ?><button name="action" value="<?=$isSetup?'setup':'login'?>"><?=$isSetup?'ثبت رمز':'ورود'?></button></form><?php endif ?></section>

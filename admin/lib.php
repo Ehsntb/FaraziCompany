@@ -22,7 +22,8 @@ function read_products(): array {
 }
 function revision(): string { return hash_file('sha256', ROOT . '/products-data.js'); }
 function token_field(): void { echo '<input type="hidden" name="csrf" value="' . h($_SESSION['csrf']) . '">'; }
-function upload_photos(): array {
+function upload_photos(string $folder = 'products'): array {
+    if (!in_array($folder, ['products', 'gallery'], true)) throw new InvalidArgumentException('Invalid upload destination');
     $result = [];
     try {
         $received=count(array_filter($_FILES['photos']['error'] ?? [], fn($e)=>$e!==UPLOAD_ERR_NO_FILE));
@@ -36,11 +37,35 @@ function upload_photos(): array {
             if (!$info || !in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true) || $info[0] * $info[1] > 24000000) throw new RuntimeException('عکس باید JPG، PNG یا WebP و حداکثر ۲۴ میلیون پیکسل باشد.');
             $image = @imagecreatefromstring(file_get_contents($tmp));
             if (!$image) throw new RuntimeException('عکس قابل خواندن نیست.');
-            $path = 'assets/products/admin-' . bin2hex(random_bytes(16)) . '.png';
+            $path = 'assets/' . $folder . '/admin-' . bin2hex(random_bytes(16)) . '.png';
             $result[] = $path;
             try { if (!imagepng($image, ROOT . '/' . $path)) throw new RuntimeException('ذخیره عکس روی هاست انجام نشد.'); }
             finally { imagedestroy($image); }
         }
         return $result;
     } catch (Throwable $e) { foreach ($result as $path) if (is_file(ROOT . '/' . $path)) unlink(ROOT . '/' . $path); throw $e; }
+}
+function gallery_files(): array {
+    $directory = ROOT . '/assets/gallery';
+    $files = scandir($directory);
+    if ($files === false) throw new RuntimeException('پوشه گالری قابل خواندن نیست.');
+    $files = array_filter($files, fn($name) => !is_link($directory . '/' . $name) && is_file($directory . '/' . $name) && in_array(strtolower(pathinfo($name, PATHINFO_EXTENSION)), ['jpg','jpeg','png','webp','gif','avif'], true));
+    natcasesort($files);
+    return array_values($files);
+}
+function remove_gallery_photos(array $selected): void {
+    $selected = array_unique($selected);
+    if (!$selected || array_diff($selected, gallery_files())) throw new RuntimeException('عکس‌های انتخاب‌شده معتبر نیستند؛ صفحه را تازه کنید.');
+    $archive = STORE . '/gallery-deleted-' . date('Ymd-His') . '-' . bin2hex(random_bytes(8));
+    if (!mkdir($archive, 0700)) throw new RuntimeException('ساخت نسخه پشتیبان ممکن نیست.');
+    $moved = [];
+    try {
+        foreach ($selected as $name) {
+            if (!rename(ROOT . '/assets/gallery/' . $name, $archive . '/' . $name)) throw new RuntimeException('حذف عکس انجام نشد؛ دسترسی نوشتن پوشه گالری را بررسی کنید.');
+            $moved[] = $name;
+        }
+    } catch (Throwable $e) {
+        foreach ($moved as $name) rename($archive . '/' . $name, ROOT . '/assets/gallery/' . $name);
+        throw $e;
+    }
 }
